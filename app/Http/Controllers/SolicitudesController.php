@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Departamentos;
 use App\Models\Solicitudes;
 use App\Models\Tipos_Solicitud;
+use App\Models\Trabajadores;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -24,6 +26,8 @@ class SolicitudesController extends Controller
     {
         return Inertia::render('Solicitudes/Create', [
             'tipos_solicitudes' => Tipos_Solicitud::all(),
+            'departamentos' => Departamentos::all(),
+            'trabajadores' => Trabajadores::all(),
         ]);
     }
 

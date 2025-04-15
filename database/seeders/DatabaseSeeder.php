@@ -70,7 +70,8 @@ class DatabaseSeeder extends Seeder
             ['nombre_trabajador' => 'Miguel Ángel González Castro'],
             ['nombre_trabajador' => 'José Manuel Torres Jiménez'],
             ['nombre_trabajador' => 'Laura Estela Díaz Romero'],
-            ['nombre_trabajador' => 'Roberto Carlos Sánchez Pérez']
+            ['nombre_trabajador' => 'Roberto Carlos Sánchez Pérez'],
+            ['nombre_trabajador' => 'Martín Eduardo García Avilanes']
         ];
 
         foreach ($trabajadores as $trabajador) {
@@ -108,6 +109,9 @@ class DatabaseSeeder extends Seeder
 
             ['trabajador_id' => DB::table('trabajadores')->where('nombre_trabajador', 'Roberto Carlos Sánchez Pérez')->first()->trabajador_id,
              'depto_id' => DB::table('departamentos')->where('nombre_depto', 'Dirección')->first()->depto_id],
+
+            ['trabajador_id' => DB::table('trabajadores')->where('nombre_trabajador', 'Martín Eduardo García Avilanes')->first()->trabajador_id,
+             'depto_id' => DB::table('departamentos')->where('nombre_depto', 'Departamento de Ingenierías')->first()->depto_id],
         ];
 
         foreach ($trabajadoresDepartamentos as $relacion) {

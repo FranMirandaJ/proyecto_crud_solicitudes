@@ -12,7 +12,7 @@ class DepartamentosController extends Controller
      */
     public function index()
     {
-        //
+        
     }
 
     /**

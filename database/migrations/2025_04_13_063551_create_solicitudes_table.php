@@ -15,7 +15,7 @@ return new class extends Migration
         Schema::create('solicitudes', function (Blueprint $table) {
             $table->uuid('solicitud_folio')->primary()->default(DB::raw('UUID()'));
             $table->uuid('tipo_solicitud_id');
-            $table->date('fecha_revision');
+            $table->date('fecha_revision')->nullable();
             $table->uuid('depto_solicitado_id');
             $table->uuid('depto_solicitante_id');
             $table->uuid('trabajador_solicitante_id');
