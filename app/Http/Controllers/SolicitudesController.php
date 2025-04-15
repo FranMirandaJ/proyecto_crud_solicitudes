@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Solicitudes;
+use App\Models\Tipos_Solicitud;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -21,7 +22,9 @@ class SolicitudesController extends Controller
      */
     public function create()
     {
-        return Inertia::render('Solicitudes/Create');
+        return Inertia::render('Solicitudes/Create', [
+            'tipos_solicitudes' => Tipos_Solicitud::all(),
+        ]);
     }
 
     /**

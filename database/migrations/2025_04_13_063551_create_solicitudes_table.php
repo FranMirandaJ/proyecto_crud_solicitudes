@@ -23,7 +23,7 @@ return new class extends Migration
             $table->string('desc_servicio', length: 250);
             $table->timestamps();
 
-            $table->foreign('tipo_solicitud_id')->references('tipo_solicitud_id')->on('tipos_solicitud')->onDelete('cascade');
+            $table->foreign('tipo_solicitud_id')->references('tipo_solicitud_id')->on('tipos__solicituds')->onDelete('cascade');
             $table->foreign('depto_solicitado_id')->references('depto_id')->on('departamentos')->onDelete('cascade');
             $table->foreign('depto_solicitante_id')->references('depto_id')->on('departamentos')->onDelete('cascade');
             $table->foreign('trabajador_solicitante_id')->references('trabajador_id')->on('trabajadores')->onDelete('cascade');

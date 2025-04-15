@@ -12,7 +12,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('tipos_solicitud', function (Blueprint $table) {
+        Schema::create('tipos__solicituds', function (Blueprint $table) {
             $table->uuid('tipo_solicitud_id')->primary()->default(DB::raw('UUID()'));
             $table->string('nombre_tipo_solicitud', length: 100)->unique();
             $table->timestamps();

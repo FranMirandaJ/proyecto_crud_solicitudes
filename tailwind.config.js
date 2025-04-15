@@ -8,7 +8,6 @@ export default {
         './storage/framework/views/*.php',
         './resources/views/**/*.blade.php',
         './resources/js/**/*.jsx',
-        require.resolve('react-widgets/styles.css'),
     ],
 
     theme: {
@@ -19,5 +18,5 @@ export default {
         },
     },
 
-    plugins: [forms, require('react-widgets-tailwind')],
+    plugins: [forms],
 };

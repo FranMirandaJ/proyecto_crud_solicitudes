@@ -3,9 +3,21 @@ import { Head, Link, useForm } from "@inertiajs/react";
 import InputLabel from "@/Components/InputLabel";
 import TextInput from "@/Components/TextInput";
 import InputError from "@/Components/InputError";
-import Combobox from "react-widgets/Combobox";
+import { useState, useEffect } from "react";
 
-export default function Index() {
+export default function Index({ tipos_solicitudes }) {
+
+    useEffect(() => {
+        const script = document.createElement("script");
+        script.src = "https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js";
+        script.async = true;
+        document.body.appendChild(script);
+
+        return () => {
+            document.body.removeChild(script);
+        };
+
+    }, []);
 
     const initialValues = {
         tipo_solicitud: null,
@@ -40,37 +52,35 @@ export default function Index() {
                         <div className="p-6 text-gray-900 dark:text-gray-100">
 
                             <form className="space-y-6">
-                            
+
                                 <div>
                                     <InputLabel htmlFor="tipo_solicitud" value="Tipo de Solicitud" />
 
-                                    <Combobox className=""
-                                        defaultValue="Yellow"
-                                        data={["Red", "Yellow", "Blue", "Orange"]}
+                                    <select
+                                        id="tipo_solicitud"
                                         name="tipo_solicitud"
-                                    />
+                                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
 
-                                    <InputError message={errors.tipo_solicitud} className="mt-2" />
+                                    >
+                                        <option value="" >Selecciona un Tipo de Solicitud</option>
+                                        {tipos_solicitudes.map((tipo) => (
+                                            <option key={`tipo-${tipo.tipo_solicitud_id}`} value={tipo.tipo_solicitud_id}>{tipo.nombre_tipo_solicitud}</option>
+                                        ))}
+                                    </select>
                                 </div>
 
                                 <div>
-                                    <InputLabel htmlFor="tipo_solicitud" value="Tipo de Solicitud" />
+                                    <InputLabel htmlFor="fecha_revision" value="Fecha de Revisión" />
 
-                                    <TextInput
-                                        id="tipo_solicitud"
-                                        type="text"
-                                        name="tipo_solicitud"
-                                        value={data.tipo_solicitud}
-                                        className="mt-1 block w-full"
-                                        isFocused={true}
-                                        onChange={(e) => setData('email', e.target.value)}
-                                    />
+
 
                                     <InputError message={errors.email} className="mt-2" />
                                 </div>
 
                             </form>
-
+                            {/* <div className="">
+                                {JSON.stringify(tipos_solicitudes)}
+                            </div> */}
                         </div>
                     </div>
                 </div>

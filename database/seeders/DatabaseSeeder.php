@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
@@ -20,7 +21,7 @@ class DatabaseSeeder extends Seeder
         DB::table('trabajadores__departamentos')->truncate();
         DB::table('trabajadores')->truncate();
         DB::table('departamentos')->truncate();
-        DB::table('tipos_solicitud')->truncate();
+        DB::table('tipos__solicituds')->truncate();
 
         // Tipos de solicitud
         $tiposSolicitud = [
@@ -35,7 +36,7 @@ class DatabaseSeeder extends Seeder
         ];
 
         foreach ($tiposSolicitud as $tipo) {
-            DB::table('tipos_solicitud')->insert($tipo);
+            DB::table('tipos__solicituds')->insert($tipo);
         }
 
         // Departamentos
@@ -116,7 +117,7 @@ class DatabaseSeeder extends Seeder
         // Solicitudes (actualizadas con los nuevos tipos y departamentos)
         $solicitudes = [
             [
-                'tipo_solicitud_id' => DB::table('tipos_solicitud')->where('nombre_tipo_solicitud', 'Solicitud de Materiales')->first()->tipo_solicitud_id,
+                'tipo_solicitud_id' => DB::table('tipos__solicituds')->where('nombre_tipo_solicitud', 'Solicitud de Materiales')->first()->tipo_solicitud_id,
                 'fecha_revision' => now()->addDays(5)->format('Y-m-d'),
                 'depto_solicitado_id' => DB::table('departamentos')->where('nombre_depto', 'Recursos Materiales y Servicios')->first()->depto_id,
                 'depto_solicitante_id' => DB::table('departamentos')->where('nombre_depto', 'Departamento de Ingenierías')->first()->depto_id,
@@ -125,7 +126,7 @@ class DatabaseSeeder extends Seeder
                 'desc_servicio' => 'Materiales para laboratorio de electrónica',
             ],
             [
-                'tipo_solicitud_id' => DB::table('tipos_solicitud')->where('nombre_tipo_solicitud', 'Solicitud de Mantenimiento Correctivo')->first()->tipo_solicitud_id,
+                'tipo_solicitud_id' => DB::table('tipos__solicituds')->where('nombre_tipo_solicitud', 'Solicitud de Mantenimiento Correctivo')->first()->tipo_solicitud_id,
                 'fecha_revision' => now()->addDays(3)->format('Y-m-d'),
                 'depto_solicitado_id' => DB::table('departamentos')->where('nombre_depto', 'Mantenimiento de Equipo')->first()->depto_id,
                 'depto_solicitante_id' => DB::table('departamentos')->where('nombre_depto', 'Centro de Cómputo')->first()->depto_id,
@@ -134,7 +135,7 @@ class DatabaseSeeder extends Seeder
                 'desc_servicio' => 'Reparación de impresora láser en sala de profesores',
             ],
             [
-                'tipo_solicitud_id' => DB::table('tipos_solicitud')->where('nombre_tipo_solicitud', 'Solicitud de Información')->first()->tipo_solicitud_id,
+                'tipo_solicitud_id' => DB::table('tipos__solicituds')->where('nombre_tipo_solicitud', 'Solicitud de Información')->first()->tipo_solicitud_id,
                 'fecha_revision' => now()->addDays(2)->format('Y-m-d'),
                 'depto_solicitado_id' => DB::table('departamentos')->where('nombre_depto', 'Recursos Humanos')->first()->depto_id,
                 'depto_solicitante_id' => DB::table('departamentos')->where('nombre_depto', 'Contabilidad')->first()->depto_id,
@@ -143,7 +144,7 @@ class DatabaseSeeder extends Seeder
                 'desc_servicio' => 'Información de prestaciones para reporte mensual',
             ],
             [
-                'tipo_solicitud_id' => DB::table('tipos_solicitud')->where('nombre_tipo_solicitud', 'Solicitud de Capacitación')->first()->tipo_solicitud_id,
+                'tipo_solicitud_id' => DB::table('tipos__solicituds')->where('nombre_tipo_solicitud', 'Solicitud de Capacitación')->first()->tipo_solicitud_id,
                 'fecha_revision' => now()->addDays(7)->format('Y-m-d'),
                 'depto_solicitado_id' => DB::table('departamentos')->where('nombre_depto', 'Vinculación')->first()->depto_id,
                 'depto_solicitante_id' => DB::table('departamentos')->where('nombre_depto', 'Lenguas Extranjeras')->first()->depto_id,
@@ -152,7 +153,7 @@ class DatabaseSeeder extends Seeder
                 'desc_servicio' => 'Capacitación en metodologías de enseñanza de inglés',
             ],
             [
-                'tipo_solicitud_id' => DB::table('tipos_solicitud')->where('nombre_tipo_solicitud', 'Solicitud de Herramientas')->first()->tipo_solicitud_id,
+                'tipo_solicitud_id' => DB::table('tipos__solicituds')->where('nombre_tipo_solicitud', 'Solicitud de Herramientas')->first()->tipo_solicitud_id,
                 'fecha_revision' => now()->addDays(4)->format('Y-m-d'),
                 'depto_solicitado_id' => DB::table('departamentos')->where('nombre_depto', 'Recursos Materiales y Servicios')->first()->depto_id,
                 'depto_solicitante_id' => DB::table('departamentos')->where('nombre_depto', 'Mantenimiento de Equipo')->first()->depto_id,
@@ -165,6 +166,14 @@ class DatabaseSeeder extends Seeder
         foreach ($solicitudes as $solicitud) {
             DB::table('solicitudes')->insert($solicitud);
         }
+
+        // Inserción de un user
+        $user = new User();
+        $user->name = 'Francisco Miranda';
+        $user->email = 'frsamirandaja@ittepic.edu.mx';
+        $user->password = '12345678';
+
+        $user->save();
 
         // Reactivar la revisión de claves foráneas
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');

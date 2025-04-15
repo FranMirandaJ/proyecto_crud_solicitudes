@@ -12,7 +12,7 @@ class TiposSolicitudController extends Controller
      */
     public function index()
     {
-        //
+
     }
 
     /**
