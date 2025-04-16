@@ -13,18 +13,6 @@ export default function Index({ tipos_solicitudes, departamentos }) {
         console.log('submit')
     }
 
-    useEffect(() => {
-        const script = document.createElement("script");
-        script.src = "https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js";
-        script.async = true;
-        document.body.appendChild(script);
-
-        return () => {
-            document.body.removeChild(script);
-        };
-
-    }, []);
-
     const initialValues = {
         tipo_solicitud: null,
         fecha_revision: null,

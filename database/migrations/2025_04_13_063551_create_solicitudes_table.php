@@ -13,7 +13,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('solicitudes', function (Blueprint $table) {
-            $table->uuid('solicitud_folio')->primary()->default(DB::raw('UUID()'));
+            $table->uuid('solicitud_id')->primary()->default(DB::raw('UUID()'));
+            $table->string('folio')->nullable();
             $table->uuid('tipo_solicitud_id');
             $table->date('fecha_revision')->nullable();
             $table->uuid('depto_solicitado_id');

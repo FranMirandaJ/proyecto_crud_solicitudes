@@ -22,6 +22,12 @@
         "vite": "^6.2.4"
     },
     "dependencies": {
-        "react-widgets-tailwind": "^1.1.5"
+        "@radix-ui/react-dialog": "^1.1.7",
+        "class-variance-authority": "^0.7.1",
+        "clsx": "^2.1.1",
+        "lucide-react": "^0.488.0",
+        "react-widgets-tailwind": "^1.1.5",
+        "tailwind-merge": "^3.2.0",
+        "tailwindcss-animate": "^1.0.7"
     }
 }

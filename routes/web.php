@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\GenerarFolio;
+use App\Http\Controllers\GenerarFolioController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SolicitudesController;
 use Illuminate\Foundation\Application;
@@ -28,6 +30,10 @@ Route::middleware('auth')->group(function () {
 Route::prefix('dashboard')->group(function () {
     Route::get('solicitudes', [SolicitudesController::class,'index'])->name('solicitudes.index');
     Route::get('solicitudes/create', [SolicitudesController::class,'create'])->name('solicitudes.create');
+});
+
+Route::prefix('dashboard')->group(function () {
+    Route::get('generar_folio', [GenerarFolioController::class,'index'])->name('generarFolio.index');
 });
 
 require __DIR__.'/auth.php';

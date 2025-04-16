@@ -37,6 +37,13 @@ export default function AuthenticatedLayout({ header, children }) {
                                 >
                                     Solicitudes
                                 </NavLink>
+
+                                <NavLink
+                                    href={route('generarFolio.index')}
+                                    active={route().current('generarFolio.index')}
+                                >
+                                    Generación de folios
+                                </NavLink>
                             </div>
                         </div>
 
