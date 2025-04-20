@@ -1,5 +1,6 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
-import { Head, Link } from "@inertiajs/react";
+import { Head } from "@inertiajs/react";
+import SecondaryButton from "@/Components/SecondaryButton";
 
 export default function Index(){
     return (
@@ -9,9 +10,9 @@ export default function Index(){
                             <h2 className="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200">
                                 Solicitudes
                             </h2>
-                            <Link className="text-white" href={route('solicitudes.create')}>
+                            <SecondaryButton href={route('solicitudes.create')}>
                                 Crear Solicitud
-                            </Link>
+                            </SecondaryButton>
                         </div>
 
                     }

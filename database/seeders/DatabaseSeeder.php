@@ -8,23 +8,40 @@ use Illuminate\Support\Facades\DB;
 
 class DatabaseSeeder extends Seeder
 {
-    /**
-     * Seed the application's database.
-     */
     public function run(): void
     {
-        // Desactivar la revisión de claves foráneas temporalmente
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        $this->truncateTables();
 
-        // Limpiar tablas
-        DB::table('solicitudes')->truncate();
-        DB::table('trabajadores__departamentos')->truncate();
-        DB::table('trabajadores')->truncate();
-        DB::table('departamentos')->truncate();
-        DB::table('tipos__solicituds')->truncate();
+        $this->seedTiposSolicitud();
+        $this->seedTrabajadores();
+        $this->seedDepartamentos();
+        $this->seedSolicitudes();
+        $this->seedUsuarioAdmin();
 
-        // Tipos de solicitud
-        $tiposSolicitud = [
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+    }
+
+
+
+    protected function truncateTables(): void
+    {
+        $tables = [
+            'solicitudes',
+            'departamentos',
+            'trabajadores',
+            'tipos__solicituds',
+            'users'
+        ];
+
+        foreach ($tables as $table) {
+            DB::table($table)->truncate();
+        }
+    }
+
+    protected function seedTiposSolicitud(): void
+    {
+        $tipos = [
             ['nombre_tipo_solicitud' => 'Solicitud de Materiales'],
             ['nombre_tipo_solicitud' => 'Solicitud de Reposición'],
             ['nombre_tipo_solicitud' => 'Solicitud de Capacitación'],
@@ -35,31 +52,43 @@ class DatabaseSeeder extends Seeder
             ['nombre_tipo_solicitud' => 'Solicitud de Información']
         ];
 
-        foreach ($tiposSolicitud as $tipo) {
-            DB::table('tipos__solicituds')->insert($tipo);
-        }
+        DB::table('tipos__solicituds')->insert($tipos);
+    }
 
-        // Departamentos
-        $departamentos = [
-            ['nombre_depto' => 'Recursos Humanos'],
-            ['nombre_depto' => 'Contabilidad'],
-            ['nombre_depto' => 'Recursos Materiales y Servicios'],
-            ['nombre_depto' => 'Mantenimiento de Equipo'],
-            ['nombre_depto' => 'Centro de Cómputo'],
-            ['nombre_depto' => 'Vinculación'],
-            ['nombre_depto' => 'Lenguas Extranjeras'],
-            ['nombre_depto' => 'Departamento de Ingenierías'],
-            ['nombre_depto' => 'Laboratorio de Cómputo'],
-            ['nombre_depto' => 'Planeación'],
-            ['nombre_depto' => 'Dirección'],
-            ['nombre_depto' => 'Servicios Escolares']
-        ];
+    protected function seedDepartamentos(): void
+{
+    $datos = [
+        ['nombre' => 'Recursos Humanos', 'jefe' => 'Juan Carlos Pérez López'],
+        ['nombre' => 'Contabilidad', 'jefe' => 'María Guadalupe García Martínez'],
+        ['nombre' => 'Recursos Materiales y Servicios', 'jefe' => 'Sofía Isabel Hernández Mendoza'],
+        ['nombre' => 'Mantenimiento de Equipo', 'jefe' => 'Miguel Ángel González Castro'],
+        ['nombre' => 'Centro de Cómputo', 'jefe' => 'Carlos Alberto López Ramírez'],
+        ['nombre' => 'Vinculación', 'jefe' => 'Luis Fernando Rodríguez González'],
+        ['nombre' => 'Lenguas Extranjeras', 'jefe' => 'Laura Estela Díaz Romero'],
+        ['nombre' => 'Departamento de Ingenierías', 'jefe' => 'Ana Patricia Martínez Sánchez'],
+        ['nombre' => 'Laboratorio de Cómputo', 'jefe' => 'José Manuel Torres Jiménez'],
+        ['nombre' => 'Planeación', 'jefe' => 'Roberto Carlos Sánchez Pérez'],
+        ['nombre' => 'Dirección', 'jefe' => 'Martín Eduardo García Avilanes'],
+        ['nombre' => 'Servicios Escolares', 'jefe' => 'Juan Carlos Pérez López'], // repetido
+    ];
 
-        foreach ($departamentos as $depto) {
-            DB::table('departamentos')->insert($depto);
-        }
+    foreach ($datos as $d) {
+        $jefeId = DB::table('trabajadores')
+            ->where('nombre_trabajador', $d['jefe'])
+            ->first()?->trabajador_id;
 
-        // Trabajadores (con 1-2 nombres y 2 apellidos)
+        DB::table('departamentos')->insert([
+            'nombre_depto' => $d['nombre'],
+            'jefe_depto_id' => $jefeId,
+            'created_at' => now(),
+            'updated_at' => now()
+        ]);
+    }
+}
+
+
+    protected function seedTrabajadores(): void
+    {
         $trabajadores = [
             ['nombre_trabajador' => 'Juan Carlos Pérez López'],
             ['nombre_trabajador' => 'María Guadalupe García Martínez'],
@@ -74,112 +103,82 @@ class DatabaseSeeder extends Seeder
             ['nombre_trabajador' => 'Martín Eduardo García Avilanes']
         ];
 
-        foreach ($trabajadores as $trabajador) {
-            DB::table('trabajadores')->insert($trabajador);
-        }
+        DB::table('trabajadores')->insert($trabajadores);
+    }
 
-        // Asignar trabajadores a departamentos (relación muchos a muchos)
-        $trabajadoresDepartamentos = [
-            ['trabajador_id' => DB::table('trabajadores')->where('nombre_trabajador', 'Juan Carlos Pérez López')->first()->trabajador_id,
-             'depto_id' => DB::table('departamentos')->where('nombre_depto', 'Recursos Humanos')->first()->depto_id],
 
-            ['trabajador_id' => DB::table('trabajadores')->where('nombre_trabajador', 'María Guadalupe García Martínez')->first()->trabajador_id,
-             'depto_id' => DB::table('departamentos')->where('nombre_depto', 'Contabilidad')->first()->depto_id],
 
-            ['trabajador_id' => DB::table('trabajadores')->where('nombre_trabajador', 'Carlos Alberto López Ramírez')->first()->trabajador_id,
-             'depto_id' => DB::table('departamentos')->where('nombre_depto', 'Centro de Cómputo')->first()->depto_id],
-
-            ['trabajador_id' => DB::table('trabajadores')->where('nombre_trabajador', 'Ana Patricia Martínez Sánchez')->first()->trabajador_id,
-             'depto_id' => DB::table('departamentos')->where('nombre_depto', 'Departamento de Ingenierías')->first()->depto_id],
-
-            ['trabajador_id' => DB::table('trabajadores')->where('nombre_trabajador', 'Luis Fernando Rodríguez González')->first()->trabajador_id,
-             'depto_id' => DB::table('departamentos')->where('nombre_depto', 'Vinculación')->first()->depto_id],
-
-            ['trabajador_id' => DB::table('trabajadores')->where('nombre_trabajador', 'Sofía Isabel Hernández Mendoza')->first()->trabajador_id,
-             'depto_id' => DB::table('departamentos')->where('nombre_depto', 'Recursos Materiales y Servicios')->first()->depto_id],
-
-            ['trabajador_id' => DB::table('trabajadores')->where('nombre_trabajador', 'Miguel Ángel González Castro')->first()->trabajador_id,
-             'depto_id' => DB::table('departamentos')->where('nombre_depto', 'Mantenimiento de Equipo')->first()->depto_id],
-
-            ['trabajador_id' => DB::table('trabajadores')->where('nombre_trabajador', 'José Manuel Torres Jiménez')->first()->trabajador_id,
-             'depto_id' => DB::table('departamentos')->where('nombre_depto', 'Laboratorio de Cómputo')->first()->depto_id],
-
-            ['trabajador_id' => DB::table('trabajadores')->where('nombre_trabajador', 'Laura Estela Díaz Romero')->first()->trabajador_id,
-             'depto_id' => DB::table('departamentos')->where('nombre_depto', 'Lenguas Extranjeras')->first()->depto_id],
-
-            ['trabajador_id' => DB::table('trabajadores')->where('nombre_trabajador', 'Roberto Carlos Sánchez Pérez')->first()->trabajador_id,
-             'depto_id' => DB::table('departamentos')->where('nombre_depto', 'Dirección')->first()->depto_id],
-
-            ['trabajador_id' => DB::table('trabajadores')->where('nombre_trabajador', 'Martín Eduardo García Avilanes')->first()->trabajador_id,
-             'depto_id' => DB::table('departamentos')->where('nombre_depto', 'Departamento de Ingenierías')->first()->depto_id],
-        ];
-
-        foreach ($trabajadoresDepartamentos as $relacion) {
-            DB::table('trabajadores__departamentos')->insert($relacion);
-        }
-
-        // Solicitudes (actualizadas con los nuevos tipos y departamentos)
+    protected function seedSolicitudes(): void
+    {
         $solicitudes = [
             [
-                'tipo_solicitud_id' => DB::table('tipos__solicituds')->where('nombre_tipo_solicitud', 'Solicitud de Materiales')->first()->tipo_solicitud_id,
-                'fecha_revision' => now()->addDays(5)->format('Y-m-d'),
-                'depto_solicitado_id' => DB::table('departamentos')->where('nombre_depto', 'Recursos Materiales y Servicios')->first()->depto_id,
-                'depto_solicitante_id' => DB::table('departamentos')->where('nombre_depto', 'Departamento de Ingenierías')->first()->depto_id,
-                'trabajador_solicitante_id' => DB::table('trabajadores')->where('nombre_trabajador', 'Ana Patricia Martínez Sánchez')->first()->trabajador_id,
-                'fecha_elaboracion' => now()->format('Y-m-d'),
-                'desc_servicio' => 'Materiales para laboratorio de electrónica',
+                'tipo' => 'Solicitud de Materiales',
+                'dep_solicitado' => 'Recursos Materiales y Servicios',
+                'dep_solicitante' => 'Departamento de Ingenierías',
+                'fecha_elaboracion' => now()->subDays(5),
+                'descripcion' => 'Materiales para laboratorio de electrónica'
             ],
             [
-                'tipo_solicitud_id' => DB::table('tipos__solicituds')->where('nombre_tipo_solicitud', 'Solicitud de Mantenimiento Correctivo')->first()->tipo_solicitud_id,
-                'fecha_revision' => now()->addDays(3)->format('Y-m-d'),
-                'depto_solicitado_id' => DB::table('departamentos')->where('nombre_depto', 'Mantenimiento de Equipo')->first()->depto_id,
-                'depto_solicitante_id' => DB::table('departamentos')->where('nombre_depto', 'Centro de Cómputo')->first()->depto_id,
-                'trabajador_solicitante_id' => DB::table('trabajadores')->where('nombre_trabajador', 'Carlos Alberto López Ramírez')->first()->trabajador_id,
-                'fecha_elaboracion' => now()->format('Y-m-d'),
-                'desc_servicio' => 'Reparación de impresora láser en sala de profesores',
+                'tipo' => 'Solicitud de Mantenimiento Correctivo',
+                'dep_solicitado' => 'Mantenimiento de Equipo',
+                'dep_solicitante' => 'Centro de Cómputo',
+                'fecha_elaboracion' => now()->subDays(3),
+                'descripcion' => 'Reparación de impresora láser en sala de profesores'
             ],
             [
-                'tipo_solicitud_id' => DB::table('tipos__solicituds')->where('nombre_tipo_solicitud', 'Solicitud de Información')->first()->tipo_solicitud_id,
-                'fecha_revision' => now()->addDays(2)->format('Y-m-d'),
-                'depto_solicitado_id' => DB::table('departamentos')->where('nombre_depto', 'Recursos Humanos')->first()->depto_id,
-                'depto_solicitante_id' => DB::table('departamentos')->where('nombre_depto', 'Contabilidad')->first()->depto_id,
-                'trabajador_solicitante_id' => DB::table('trabajadores')->where('nombre_trabajador', 'María Guadalupe García Martínez')->first()->trabajador_id,
-                'fecha_elaboracion' => now()->format('Y-m-d'),
-                'desc_servicio' => 'Información de prestaciones para reporte mensual',
+                'tipo' => 'Solicitud de Información',
+                'dep_solicitado' => 'Recursos Humanos',
+                'dep_solicitante' => 'Contabilidad',
+                'fecha_elaboracion' => now()->subDays(2),
+                'descripcion' => 'Información de prestaciones para reporte mensual'
             ],
             [
-                'tipo_solicitud_id' => DB::table('tipos__solicituds')->where('nombre_tipo_solicitud', 'Solicitud de Capacitación')->first()->tipo_solicitud_id,
-                'fecha_revision' => now()->addDays(7)->format('Y-m-d'),
-                'depto_solicitado_id' => DB::table('departamentos')->where('nombre_depto', 'Vinculación')->first()->depto_id,
-                'depto_solicitante_id' => DB::table('departamentos')->where('nombre_depto', 'Lenguas Extranjeras')->first()->depto_id,
-                'trabajador_solicitante_id' => DB::table('trabajadores')->where('nombre_trabajador', 'Laura Estela Díaz Romero')->first()->trabajador_id,
-                'fecha_elaboracion' => now()->format('Y-m-d'),
-                'desc_servicio' => 'Capacitación en metodologías de enseñanza de inglés',
+                'tipo' => 'Solicitud de Capacitación',
+                'dep_solicitado' => 'Vinculación',
+                'dep_solicitante' => 'Lenguas Extranjeras',
+                'fecha_elaboracion' => now()->subDays(7),
+                'descripcion' => 'Capacitación en metodologías de enseñanza de inglés'
             ],
             [
-                'tipo_solicitud_id' => DB::table('tipos__solicituds')->where('nombre_tipo_solicitud', 'Solicitud de Herramientas')->first()->tipo_solicitud_id,
-                'fecha_revision' => now()->addDays(4)->format('Y-m-d'),
-                'depto_solicitado_id' => DB::table('departamentos')->where('nombre_depto', 'Recursos Materiales y Servicios')->first()->depto_id,
-                'depto_solicitante_id' => DB::table('departamentos')->where('nombre_depto', 'Mantenimiento de Equipo')->first()->depto_id,
-                'trabajador_solicitante_id' => DB::table('trabajadores')->where('nombre_trabajador', 'Miguel Ángel González Castro')->first()->trabajador_id,
-                'fecha_elaboracion' => now()->format('Y-m-d'),
-                'desc_servicio' => 'Juego de herramientas para taller de mantenimiento',
+                'tipo' => 'Solicitud de Herramientas',
+                'dep_solicitado' => 'Recursos Materiales y Servicios',
+                'dep_solicitante' => 'Mantenimiento de Equipo',
+                'fecha_elaboracion' => now()->subDays(4),
+                'descripcion' => 'Juego de herramientas para taller de mantenimiento'
             ]
         ];
 
         foreach ($solicitudes as $solicitud) {
-            DB::table('solicitudes')->insert($solicitud);
+            $tipoId = DB::table('tipos__solicituds')
+                ->where('nombre_tipo_solicitud', $solicitud['tipo'])
+                ->first()->tipo_solicitud_id;
+
+            $deptoSolicitadoId = DB::table('departamentos')
+                ->where('nombre_depto', $solicitud['dep_solicitado'])
+                ->first()->depto_id;
+
+            $deptoSolicitanteId = DB::table('departamentos')
+                ->where('nombre_depto', $solicitud['dep_solicitante'])
+                ->first()->depto_id;
+
+            DB::table('solicitudes')->insert([
+                'tipo_solicitud_id' => $tipoId,
+                'depto_solicitado_id' => $deptoSolicitadoId,
+                'depto_solicitante_id' => $deptoSolicitanteId,
+                'fecha_elaboracion' => $solicitud['fecha_elaboracion']->format('Y-m-d'),
+                'desc_servicio' => $solicitud['descripcion'],
+                'created_at' => now(),
+                'updated_at' => now()
+            ]);
         }
+    }
 
-        // Inserción de un user
-        $user = new User();
-        $user->name = 'Francisco Miranda';
-        $user->email = 'frsamirandaja@ittepic.edu.mx';
-        $user->password = '12345678';
-
-        $user->save();
-
-        // Reactivar la revisión de claves foráneas
-        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+    protected function seedUsuarioAdmin(): void
+    {
+        User::create([
+            'name' => 'Francisco Miranda',
+            'email' => 'frsamirandaja@ittepic.edu.mx',
+            'password' => bcrypt('12345678')
+        ]);
     }
 }

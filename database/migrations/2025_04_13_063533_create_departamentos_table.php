@@ -15,7 +15,11 @@ return new class extends Migration
         Schema::create('departamentos', function (Blueprint $table) {
             $table->uuid('depto_id')->primary()->default(DB::raw('UUID()'));
             $table->string('nombre_depto', length: 100)->unique();
+            $table->uuid('jefe_depto_id');
             $table->timestamps();
+
+            $table->foreign('jefe_depto_id')->references('trabajador_id')->on('trabajadores')->onDelete('cascade');
+
         });
     }
 
