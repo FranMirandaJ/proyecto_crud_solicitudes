@@ -13,7 +13,6 @@ class DatabaseSeeder extends Seeder
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
         $this->truncateTables();
 
-        $this->seedTiposSolicitud();
         $this->seedTrabajadores();
         $this->seedDepartamentos();
         $this->seedSolicitudes();
@@ -30,29 +29,12 @@ class DatabaseSeeder extends Seeder
             'solicitudes',
             'departamentos',
             'trabajadores',
-            'tipos__solicituds',
             'users'
         ];
 
         foreach ($tables as $table) {
             DB::table($table)->truncate();
         }
-    }
-
-    protected function seedTiposSolicitud(): void
-    {
-        $tipos = [
-            ['nombre_tipo_solicitud' => 'Solicitud de Materiales'],
-            ['nombre_tipo_solicitud' => 'Solicitud de Reposición'],
-            ['nombre_tipo_solicitud' => 'Solicitud de Capacitación'],
-            ['nombre_tipo_solicitud' => 'Solicitud de Insumos'],
-            ['nombre_tipo_solicitud' => 'Solicitud de Herramientas'],
-            ['nombre_tipo_solicitud' => 'Solicitud de Mantenimiento Correctivo'],
-            ['nombre_tipo_solicitud' => 'Solicitud de Mantenimiento Preventivo'],
-            ['nombre_tipo_solicitud' => 'Solicitud de Información']
-        ];
-
-        DB::table('tipos__solicituds')->insert($tipos);
     }
 
     protected function seedDepartamentos(): void
@@ -112,35 +94,30 @@ class DatabaseSeeder extends Seeder
     {
         $solicitudes = [
             [
-                'tipo' => 'Solicitud de Materiales',
                 'dep_solicitado' => 'Recursos Materiales y Servicios',
                 'dep_solicitante' => 'Departamento de Ingenierías',
                 'fecha_elaboracion' => now()->subDays(5),
                 'descripcion' => 'Materiales para laboratorio de electrónica'
             ],
             [
-                'tipo' => 'Solicitud de Mantenimiento Correctivo',
                 'dep_solicitado' => 'Mantenimiento de Equipo',
                 'dep_solicitante' => 'Centro de Cómputo',
                 'fecha_elaboracion' => now()->subDays(3),
                 'descripcion' => 'Reparación de impresora láser en sala de profesores'
             ],
             [
-                'tipo' => 'Solicitud de Información',
                 'dep_solicitado' => 'Recursos Humanos',
                 'dep_solicitante' => 'Contabilidad',
                 'fecha_elaboracion' => now()->subDays(2),
                 'descripcion' => 'Información de prestaciones para reporte mensual'
             ],
             [
-                'tipo' => 'Solicitud de Capacitación',
                 'dep_solicitado' => 'Vinculación',
                 'dep_solicitante' => 'Lenguas Extranjeras',
                 'fecha_elaboracion' => now()->subDays(7),
                 'descripcion' => 'Capacitación en metodologías de enseñanza de inglés'
             ],
             [
-                'tipo' => 'Solicitud de Herramientas',
                 'dep_solicitado' => 'Recursos Materiales y Servicios',
                 'dep_solicitante' => 'Mantenimiento de Equipo',
                 'fecha_elaboracion' => now()->subDays(4),
@@ -149,9 +126,6 @@ class DatabaseSeeder extends Seeder
         ];
 
         foreach ($solicitudes as $solicitud) {
-            $tipoId = DB::table('tipos__solicituds')
-                ->where('nombre_tipo_solicitud', $solicitud['tipo'])
-                ->first()->tipo_solicitud_id;
 
             $deptoSolicitadoId = DB::table('departamentos')
                 ->where('nombre_depto', $solicitud['dep_solicitado'])
@@ -162,7 +136,6 @@ class DatabaseSeeder extends Seeder
                 ->first()->depto_id;
 
             DB::table('solicitudes')->insert([
-                'tipo_solicitud_id' => $tipoId,
                 'depto_solicitado_id' => $deptoSolicitadoId,
                 'depto_solicitante_id' => $deptoSolicitanteId,
                 'fecha_elaboracion' => $solicitud['fecha_elaboracion']->format('Y-m-d'),

@@ -16,7 +16,10 @@ class SolicitudesController extends Controller
      */
     public function index()
     {
-        return Inertia::render('Solicitudes/Index');
+        return Inertia::render('Solicitudes/Index', [
+            'departamentos' => Departamentos::all(),
+            'trabajadores' => Trabajadores::all(),
+        ]);
     }
 
     /**
@@ -25,7 +28,6 @@ class SolicitudesController extends Controller
     public function create()
     {
         return Inertia::render('Solicitudes/Create', [
-            'tipos_solicitudes' => Tipos_Solicitud::all(),
             'departamentos' => Departamentos::all(),
             'trabajadores' => Trabajadores::all(),
         ]);
@@ -36,7 +38,7 @@ class SolicitudesController extends Controller
      */
     public function store(Request $request)
     {
-        
+
     }
 
     /**

@@ -31,7 +31,8 @@ export default function Index({ tipos_solicitudes, departamentos }) {
                     <h2 className="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200">
                         Crear Solicitud
                     </h2>
-                    <Link className="text-white" href={route('solicitudes.index')}>
+                    <Link className="inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-xs font-semibold uppercase tracking-widest text-gray-700 shadow-sm transition duration-150 ease-in-out hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700"
+                        href={route('solicitudes.index')}>
                         Solicitudes
                     </Link>
                 </div>
@@ -92,10 +93,10 @@ export default function Index({ tipos_solicitudes, departamentos }) {
                                     >
                                         <option value="" disabled hidden>Selecciona un Departamento</option>
                                         {departamentos
-                                        .filter(depto => ['Recursos Materiales y Servicios', 'Mantenimiento de Equipo', 'Centro de Cómputo'].includes(depto.nombre_depto))
-                                        .map((depto) => (
-                                            <option key={`depto-${depto.depto_id}`} value={depto.depto_id}>{depto.nombre_depto}</option>
-                                        ))}
+                                            .filter(depto => ['Recursos Materiales y Servicios', 'Mantenimiento de Equipo', 'Centro de Cómputo'].includes(depto.nombre_depto))
+                                            .map((depto) => (
+                                                <option key={`depto-${depto.depto_id}`} value={depto.depto_id}>{depto.nombre_depto}</option>
+                                            ))}
                                     </select>
                                 </div>
 
@@ -111,9 +112,9 @@ export default function Index({ tipos_solicitudes, departamentos }) {
                                     >
                                         <option value="" disabled hidden>Selecciona un Departamento</option>
                                         {departamentos
-                                        .map((depto) => (
-                                            <option key={`depto-${depto.depto_id}`} value={depto.depto_id}>{depto.nombre_depto}</option>
-                                        ))}
+                                            .map((depto) => (
+                                                <option key={`depto-${depto.depto_id}`} value={depto.depto_id}>{depto.nombre_depto}</option>
+                                            ))}
                                     </select>
                                 </div>
 

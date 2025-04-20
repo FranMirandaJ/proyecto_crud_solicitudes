@@ -15,14 +15,13 @@ return new class extends Migration
         Schema::create('solicitudes', function (Blueprint $table) {
             $table->uuid('solicitud_id')->primary()->default(DB::raw('UUID()'));
             $table->string('folio')->nullable();
-            $table->uuid('tipo_solicitud_id');
             $table->uuid('depto_solicitado_id');
             $table->uuid('depto_solicitante_id');
             $table->date('fecha_elaboracion');
             $table->string('desc_servicio', length: 250);
+            $table->boolean('esta_enviada')->default(false);
             $table->timestamps();
 
-            $table->foreign('tipo_solicitud_id')->references('tipo_solicitud_id')->on('tipos__solicituds')->onDelete('cascade');
             $table->foreign('depto_solicitado_id')->references('depto_id')->on('departamentos')->onDelete('cascade');
             $table->foreign('depto_solicitante_id')->references('depto_id')->on('departamentos')->onDelete('cascade');
         });
