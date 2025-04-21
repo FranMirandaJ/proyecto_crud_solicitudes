@@ -47,8 +47,6 @@ class SolicitudesController extends Controller
             'trabajador_solicitante_id' => $trabajador_solicitante
         ]);
 
-        return to_route('solicitudes.index')->with('success', 'Solicitud creada correctamente');
-
     }
 
     /**

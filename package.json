@@ -29,6 +29,7 @@
         "class-variance-authority": "^0.7.1",
         "clsx": "^2.1.1",
         "lucide-react": "^0.488.0",
+        "react-toastify": "^11.0.5",
         "react-widgets-tailwind": "^1.1.5",
         "tailwind-merge": "^3.2.0",
         "tailwindcss-animate": "^1.0.7"

@@ -21,6 +21,7 @@ import {
 import { Label } from "@/Components/ui/label";
 import { Button } from "@/Components/ui/button";
 import { Textarea } from "@/Components/ui/textarea";
+import { toast } from "react-toastify";
 
 export default function Index({ departamentos }) {
 
@@ -28,6 +29,7 @@ export default function Index({ departamentos }) {
         data: dataSolicitud,
         setData: setDataSolicitud,
         errors,
+        reset,
         post
     } = useForm({
         depto_solicitado_id: null,
@@ -39,7 +41,12 @@ export default function Index({ departamentos }) {
 
         e.preventDefault()
 
-        post(route('solicitudes.store'))
+        post(route('solicitudes.store'), {
+            onSuccess: () => {
+                reset()
+                toast.success('Solicitud creada con éxito')
+            }
+        })
 
     }
 
@@ -52,12 +59,12 @@ export default function Index({ departamentos }) {
                     </h2>
 
                     {/*----- CODIGO DE VENTANA MODAL PARA CREAR SOLICITUDES ------*/}
-                    <Dialog>
+                    <Dialog forceMount>
                         <DialogTrigger asChild>
                             <Button variant="outline">Crear Solicitud</Button>
                         </DialogTrigger>
 
-                        <DialogContent className="sm:max-w-[600px]">
+                        <DialogContent className="sm:max-w-[600px]" >
                             <form onSubmit={handleSubmit} >
                                 <DialogHeader>
                                     <DialogTitle>Crear Solicitud</DialogTitle>
