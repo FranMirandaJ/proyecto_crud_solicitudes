@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Solicitudes\SolicitudRequest;
 use App\Models\Departamentos;
 use App\Models\Solicitudes;
 use App\Models\Tipos_Solicitud;
@@ -27,17 +28,26 @@ class SolicitudesController extends Controller
      */
     public function create()
     {
-        return Inertia::render('Solicitudes/Create', [
-            'departamentos' => Departamentos::all(),
-            'trabajadores' => Trabajadores::all(),
-        ]);
+
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(SolicitudRequest $request)
     {
+
+        $trabajador_solicitante = Departamentos::where('depto_id', $request->depto_solicitante_id)->first()->jefe_depto_id;
+
+        Solicitudes::create([
+            'depto_solicitado_id' => $request->depto_solicitado_id,
+            'depto_solicitante_id' => $request->depto_solicitante_id,
+            'fecha_elaboracion' => now(),
+            'desc_servicio' => $request->desc_servicio,
+            'trabajador_solicitante_id' => $trabajador_solicitante
+        ]);
+
+        return to_route('solicitudes.index')->with('success', 'Solicitud creada correctamente');
 
     }
 

@@ -1,12 +1,20 @@
 <?php
 
-use App\Http\Controllers\GenerarFolio;
 use App\Http\Controllers\GenerarFolioController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SolicitudesController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+
+Route::resource('solicitudes', SolicitudesController::class)
+    ->middleware(['auth', 'verified'])
+    ->names('solicitudes');
+
+Route::resource('generar_folio', GenerarFolioController::class)
+    ->middleware(['auth', 'verified'])
+    ->only(['index', 'store'])
+    ->names('generar_folio');
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -27,13 +35,8 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::prefix('dashboard')->group(function () {
-    Route::get('solicitudes', [SolicitudesController::class,'index'])->name('solicitudes.index');
-    Route::get('solicitudes/create', [SolicitudesController::class,'create'])->name('solicitudes.create');
-});
 
-Route::prefix('dashboard')->group(function () {
-    Route::get('generar_folio', [GenerarFolioController::class,'index'])->name('generarFolio.index');
-});
+
+
 
 require __DIR__.'/auth.php';

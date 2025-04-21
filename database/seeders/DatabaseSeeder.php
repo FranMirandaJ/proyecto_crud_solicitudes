@@ -38,35 +38,35 @@ class DatabaseSeeder extends Seeder
     }
 
     protected function seedDepartamentos(): void
-{
-    $datos = [
-        ['nombre' => 'Recursos Humanos', 'jefe' => 'Juan Carlos Pérez López'],
-        ['nombre' => 'Contabilidad', 'jefe' => 'María Guadalupe García Martínez'],
-        ['nombre' => 'Recursos Materiales y Servicios', 'jefe' => 'Sofía Isabel Hernández Mendoza'],
-        ['nombre' => 'Mantenimiento de Equipo', 'jefe' => 'Miguel Ángel González Castro'],
-        ['nombre' => 'Centro de Cómputo', 'jefe' => 'Carlos Alberto López Ramírez'],
-        ['nombre' => 'Vinculación', 'jefe' => 'Luis Fernando Rodríguez González'],
-        ['nombre' => 'Lenguas Extranjeras', 'jefe' => 'Laura Estela Díaz Romero'],
-        ['nombre' => 'Departamento de Ingenierías', 'jefe' => 'Ana Patricia Martínez Sánchez'],
-        ['nombre' => 'Laboratorio de Cómputo', 'jefe' => 'José Manuel Torres Jiménez'],
-        ['nombre' => 'Planeación', 'jefe' => 'Roberto Carlos Sánchez Pérez'],
-        ['nombre' => 'Dirección', 'jefe' => 'Martín Eduardo García Avilanes'],
-        ['nombre' => 'Servicios Escolares', 'jefe' => 'Juan Carlos Pérez López'], // repetido
-    ];
+    {
+        $datos = [
+            ['nombre' => 'Recursos Humanos', 'jefe' => 'Juan Carlos Pérez López'],
+            ['nombre' => 'Contabilidad', 'jefe' => 'María Guadalupe García Martínez'],
+            ['nombre' => 'Recursos Materiales y Servicios', 'jefe' => 'Sofía Isabel Hernández Mendoza'],
+            ['nombre' => 'Mantenimiento de Equipo', 'jefe' => 'Miguel Ángel González Castro'],
+            ['nombre' => 'Centro de Cómputo', 'jefe' => 'Carlos Alberto López Ramírez'],
+            ['nombre' => 'Vinculación', 'jefe' => 'Luis Fernando Rodríguez González'],
+            ['nombre' => 'Lenguas Extranjeras', 'jefe' => 'Laura Estela Díaz Romero'],
+            ['nombre' => 'Departamento de Ingenierías', 'jefe' => 'Ana Patricia Martínez Sánchez'],
+            ['nombre' => 'Laboratorio de Cómputo', 'jefe' => 'José Manuel Torres Jiménez'],
+            ['nombre' => 'Planeación', 'jefe' => 'Roberto Carlos Sánchez Pérez'],
+            ['nombre' => 'Dirección', 'jefe' => 'Martín Eduardo García Avilanes'],
+            ['nombre' => 'Servicios Escolares', 'jefe' => 'Juan Carlos Pérez López'], // repetido
+        ];
 
-    foreach ($datos as $d) {
-        $jefeId = DB::table('trabajadores')
-            ->where('nombre_trabajador', $d['jefe'])
-            ->first()?->trabajador_id;
+        foreach ($datos as $d) {
+            $jefeId = DB::table('trabajadores')
+                ->where('nombre_trabajador', $d['jefe'])
+                ->first()?->trabajador_id;
 
-        DB::table('departamentos')->insert([
-            'nombre_depto' => $d['nombre'],
-            'jefe_depto_id' => $jefeId,
-            'created_at' => now(),
-            'updated_at' => now()
-        ]);
+            DB::table('departamentos')->insert([
+                'nombre_depto' => $d['nombre'],
+                'jefe_depto_id' => $jefeId,
+                'created_at' => now(),
+                'updated_at' => now()
+            ]);
+        }
     }
-}
 
 
     protected function seedTrabajadores(): void
@@ -126,18 +126,21 @@ class DatabaseSeeder extends Seeder
         ];
 
         foreach ($solicitudes as $solicitud) {
-
-            $deptoSolicitadoId = DB::table('departamentos')
+            $deptoSolicitado = DB::table('departamentos')
                 ->where('nombre_depto', $solicitud['dep_solicitado'])
-                ->first()->depto_id;
+                ->first();
 
-            $deptoSolicitanteId = DB::table('departamentos')
+            $deptoSolicitante = DB::table('departamentos')
                 ->where('nombre_depto', $solicitud['dep_solicitante'])
-                ->first()->depto_id;
+                ->first();
+
+            // Obtener el jefe del depto solicitante
+            $trabajadorSolicitanteId = $deptoSolicitante?->jefe_depto_id;
 
             DB::table('solicitudes')->insert([
-                'depto_solicitado_id' => $deptoSolicitadoId,
-                'depto_solicitante_id' => $deptoSolicitanteId,
+                'depto_solicitado_id' => $deptoSolicitado->depto_id,
+                'depto_solicitante_id' => $deptoSolicitante->depto_id,
+                'trabajador_solicitante_id' => $trabajadorSolicitanteId,
                 'fecha_elaboracion' => $solicitud['fecha_elaboracion']->format('Y-m-d'),
                 'desc_servicio' => $solicitud['descripcion'],
                 'created_at' => now(),
@@ -145,6 +148,7 @@ class DatabaseSeeder extends Seeder
             ]);
         }
     }
+
 
     protected function seedUsuarioAdmin(): void
     {

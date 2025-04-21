@@ -1,5 +1,5 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
-import { Head } from "@inertiajs/react";
+import { Head, useForm } from "@inertiajs/react";
 import {
     Dialog,
     DialogContent,
@@ -19,22 +19,28 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import { Label } from "@/Components/ui/label";
-import { Input } from "@/Components/ui/input";
 import { Button } from "@/Components/ui/button";
 import { Textarea } from "@/Components/ui/textarea";
-import { useState } from "react";
 
-export default function Index({ departamentos, trabajadores }) {
+export default function Index({ departamentos }) {
 
-    const [datosCreacion, setDatosCreacion] = useState({
+    const {
+        data: dataSolicitud,
+        setData: setDataSolicitud,
+        errors,
+        post
+    } = useForm({
         depto_solicitado_id: null,
         depto_solicitante_id: null,
         desc_servicio: ""
     })
 
     function handleSubmit(e) {
+
         e.preventDefault()
-        alert(JSON.stringify(datosCreacion))
+
+        post(route('solicitudes.store'))
+
     }
 
     return (
@@ -68,8 +74,8 @@ export default function Index({ departamentos, trabajadores }) {
                                         <Label htmlFor="depto_solicitado_id" className="text-right">
                                             Departamento Solicitado
                                         </Label>
-                                        <Select value={datosCreacion.depto_solicitado_id} onValueChange={(value) =>
-                                            setDatosCreacion({ ...datosCreacion, depto_solicitado_id: value })
+                                        <Select value={dataSolicitud.depto_solicitado_id} onValueChange={(value) =>
+                                            setDataSolicitud({ ...dataSolicitud, depto_solicitado_id: value })
                                         }>
                                             <SelectTrigger id="depto_solicitado_id" className="col-span-3" >
                                                 <SelectValue placeholder="Seleccione un Departamento" />
@@ -85,14 +91,18 @@ export default function Index({ departamentos, trabajadores }) {
                                                 </SelectGroup>
                                             </SelectContent>
                                         </Select>
+                                        {errors.depto_solicitado_id && (
+                                            <p className="text-sm text-red-500 col-span-4 ml-[calc(25%+1rem)]">{errors.depto_solicitado_id}</p>
+                                        )}
+
                                     </div>
 
                                     <div className="grid grid-cols-4 items-center gap-4">
                                         <Label htmlFor="depto_solicitante_id" className="text-right">
                                             Departamento Solicitante
                                         </Label>
-                                        <Select value={datosCreacion.depto_solicitante_id} onValueChange={(value) =>
-                                            setDatosCreacion({ ...datosCreacion, depto_solicitante_id: value })
+                                        <Select value={dataSolicitud.depto_solicitante_id} onValueChange={(value) =>
+                                            setDataSolicitud({ ...dataSolicitud, depto_solicitante_id: value })
                                         }>
                                             <SelectTrigger id="depto_solicitante_id" className="col-span-3" >
                                                 <SelectValue placeholder="Seleccione un Departamento" />
@@ -107,6 +117,9 @@ export default function Index({ departamentos, trabajadores }) {
                                                 </SelectGroup>
                                             </SelectContent>
                                         </Select>
+                                        {errors.depto_solicitante_id && (
+                                            <p className="text-sm text-red-500 col-span-4 ml-[calc(25%+1rem)]">{errors.depto_solicitante_id}</p>
+                                        )}
                                     </div>
 
                                     <div className="grid grid-cols-4 items-center gap-4">
@@ -118,11 +131,15 @@ export default function Index({ departamentos, trabajadores }) {
                                             placeholder="Escribe una descripción del servicio"
                                             className="col-span-3"
                                             rows={4}
-                                            value={datosCreacion.desc_servicio}
+                                            value={dataSolicitud.desc_servicio}
                                             onChange={(e) =>
-                                                setDatosCreacion({ ...datosCreacion, desc_servicio: e.target.value })
+                                                setDataSolicitud({ ...dataSolicitud, desc_servicio: e.target.value })
                                             }
                                         />
+                                        {errors.desc_servicio && (
+                                            <p className="text-sm text-red-500 col-span-4 ml-[calc(25%+1rem)]">{errors.desc_servicio}</p>
+                                        )}
+
                                     </div>
                                 </div>
 
