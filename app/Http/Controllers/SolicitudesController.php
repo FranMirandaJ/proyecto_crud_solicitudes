@@ -19,7 +19,7 @@ class SolicitudesController extends Controller
     {
         return Inertia::render('Solicitudes/Index', [
             'departamentos' => Departamentos::all(),
-            'trabajadores' => Trabajadores::all(),
+            'solicitudes' => Solicitudes::all(),
         ]);
     }
 
