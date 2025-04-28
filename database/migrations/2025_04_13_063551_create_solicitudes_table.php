@@ -18,7 +18,6 @@ return new class extends Migration
             $table->uuid('depto_solicitado_id');
             $table->uuid('depto_solicitante_id');
             $table->uuid('trabajador_solicitante_id');
-            $table->date('fecha_elaboracion');
             $table->string('desc_servicio', length: 500);
             $table->boolean('esta_enviada')->default(false);
             $table->timestamps();

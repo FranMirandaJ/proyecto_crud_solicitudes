@@ -42,7 +42,6 @@ class SolicitudesController extends Controller
         Solicitudes::create([
             'depto_solicitado_id' => $request->depto_solicitado_id,
             'depto_solicitante_id' => $request->depto_solicitante_id,
-            'fecha_elaboracion' => now(),
             'desc_servicio' => $request->desc_servicio,
             'trabajador_solicitante_id' => $trabajador_solicitante
         ]);

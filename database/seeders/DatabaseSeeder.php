@@ -2,156 +2,94 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
+use App\Models\User;
 
 class DatabaseSeeder extends Seeder
 {
+    /**
+     * Seed the application's database.
+     */
     public function run(): void
     {
-        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
-        $this->truncateTables();
-
-        $this->seedTrabajadores();
-        $this->seedDepartamentos();
-        $this->seedSolicitudes();
-        $this->seedUsuarioAdmin();
-
-        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
-    }
-
-
-
-    protected function truncateTables(): void
-    {
-        $tables = [
-            'solicitudes',
-            'departamentos',
-            'trabajadores',
-            'users'
+        // Lista de departamentos y jefes
+        $departamentosJefes = [
+            'Centro de Cómputo' => 'Roberto Carlos Villalobos Montiel',
+            'Mantenimiento de Equipo' => 'Salvador Salas Carlock',
+            'Recursos Materiales y Servicios' => 'José Antonio García Madrigal',
+            'Departamento de Recursos Financieros' => 'Claudia Ramírez Montoya',
+            'Departamento de Recursos Humanos' => 'Adriana Yarim González Ramos',
+            'Servicios Administrativos' => 'Daniel Alejandro García Banda',
+            'Departamento de Servicios Escolares' => 'Zoila Raquel Aguirre González',
+            'Centro de Información' => 'Norma Natalia Rubín Ramírez',
+            'Departamento de Planeación' => 'Rommel Rodríguez Garay',
+            'Departamento de Ingenierías' => 'Martin Eduardo García Avilanes',
+            'Departamento de Ciencias de la Tierra' => 'Mariana Cortés Zayas',
+            'División de Estudios Profesionales' => 'Israel Arjona Vizcaíno',
         ];
 
-        foreach ($tables as $table) {
-            DB::table($table)->truncate();
-        }
-    }
+        $trabajadores = [];
+        $departamentos = [];
 
-    protected function seedDepartamentos(): void
-    {
-        $datos = [
-            ['nombre' => 'Recursos Humanos', 'jefe' => 'Juan Carlos Pérez López'],
-            ['nombre' => 'Contabilidad', 'jefe' => 'María Guadalupe García Martínez'],
-            ['nombre' => 'Recursos Materiales y Servicios', 'jefe' => 'Sofía Isabel Hernández Mendoza'],
-            ['nombre' => 'Mantenimiento de Equipo', 'jefe' => 'Miguel Ángel González Castro'],
-            ['nombre' => 'Centro de Cómputo', 'jefe' => 'Carlos Alberto López Ramírez'],
-            ['nombre' => 'Vinculación', 'jefe' => 'Luis Fernando Rodríguez González'],
-            ['nombre' => 'Lenguas Extranjeras', 'jefe' => 'Laura Estela Díaz Romero'],
-            ['nombre' => 'Departamento de Ingenierías', 'jefe' => 'Ana Patricia Martínez Sánchez'],
-            ['nombre' => 'Laboratorio de Cómputo', 'jefe' => 'José Manuel Torres Jiménez'],
-            ['nombre' => 'Planeación', 'jefe' => 'Roberto Carlos Sánchez Pérez'],
-            ['nombre' => 'Dirección', 'jefe' => 'Martín Eduardo García Avilanes'],
-            ['nombre' => 'Servicios Escolares', 'jefe' => 'Juan Carlos Pérez López'], // repetido
-        ];
+        // Insertar trabajadores y departamentos
+        foreach ($departamentosJefes as $nombreDepto => $nombreJefe) {
+            $trabajadorId = Str::uuid();
+            $deptoId = Str::uuid();
 
-        foreach ($datos as $d) {
-            $jefeId = DB::table('trabajadores')
-                ->where('nombre_trabajador', $d['jefe'])
-                ->first()?->trabajador_id;
+            DB::table('trabajadores')->insert([
+                'trabajador_id' => $trabajadorId,
+                'nombre_trabajador' => $nombreJefe,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
 
             DB::table('departamentos')->insert([
-                'nombre_depto' => $d['nombre'],
-                'jefe_depto_id' => $jefeId,
+                'depto_id' => $deptoId,
+                'nombre_depto' => $nombreDepto,
+                'jefe_depto_id' => $trabajadorId,
                 'created_at' => now(),
-                'updated_at' => now()
+                'updated_at' => now(),
             ]);
+
+            $trabajadores[$nombreDepto] = $trabajadorId;
+            $departamentos[$nombreDepto] = $deptoId;
         }
-    }
 
-
-    protected function seedTrabajadores(): void
-    {
-        $trabajadores = [
-            ['nombre_trabajador' => 'Juan Carlos Pérez López'],
-            ['nombre_trabajador' => 'María Guadalupe García Martínez'],
-            ['nombre_trabajador' => 'Carlos Alberto López Ramírez'],
-            ['nombre_trabajador' => 'Ana Patricia Martínez Sánchez'],
-            ['nombre_trabajador' => 'Luis Fernando Rodríguez González'],
-            ['nombre_trabajador' => 'Sofía Isabel Hernández Mendoza'],
-            ['nombre_trabajador' => 'Miguel Ángel González Castro'],
-            ['nombre_trabajador' => 'José Manuel Torres Jiménez'],
-            ['nombre_trabajador' => 'Laura Estela Díaz Romero'],
-            ['nombre_trabajador' => 'Roberto Carlos Sánchez Pérez'],
-            ['nombre_trabajador' => 'Martín Eduardo García Avilanes']
-        ];
-
-        DB::table('trabajadores')->insert($trabajadores);
-    }
-
-
-
-    protected function seedSolicitudes(): void
-    {
+        // Crear 3 solicitudes (sin folio)
         $solicitudes = [
             [
-                'dep_solicitado' => 'Recursos Materiales y Servicios',
-                'dep_solicitante' => 'Departamento de Ingenierías',
-                'fecha_elaboracion' => now()->subDays(5),
-                'descripcion' => 'Materiales para laboratorio de electrónica'
+                'depto_solicitado' => 'Centro de Cómputo',
+                'depto_solicitante' => 'Departamento de Planeación',
+                'desc_servicio' => 'Solicitamos mantenimiento de equipo de cómputo en el área de planeación.',
             ],
             [
-                'dep_solicitado' => 'Mantenimiento de Equipo',
-                'dep_solicitante' => 'Centro de Cómputo',
-                'fecha_elaboracion' => now()->subDays(3),
-                'descripcion' => 'Reparación de impresora láser en sala de profesores'
+                'depto_solicitado' => 'Mantenimiento de Equipo',
+                'depto_solicitante' => 'Servicios Administrativos',
+                'desc_servicio' => 'Se requiere reparación de impresora en servicios administrativos.',
             ],
             [
-                'dep_solicitado' => 'Recursos Humanos',
-                'dep_solicitante' => 'Contabilidad',
-                'fecha_elaboracion' => now()->subDays(2),
-                'descripcion' => 'Información de prestaciones para reporte mensual'
+                'depto_solicitado' => 'Recursos Materiales y Servicios',
+                'depto_solicitante' => 'Departamento de Recursos Financieros',
+                'desc_servicio' => 'Solicitamos adquisición de material de oficina urgente.',
             ],
-            [
-                'dep_solicitado' => 'Vinculación',
-                'dep_solicitante' => 'Lenguas Extranjeras',
-                'fecha_elaboracion' => now()->subDays(7),
-                'descripcion' => 'Capacitación en metodologías de enseñanza de inglés'
-            ],
-            [
-                'dep_solicitado' => 'Recursos Materiales y Servicios',
-                'dep_solicitante' => 'Mantenimiento de Equipo',
-                'fecha_elaboracion' => now()->subDays(4),
-                'descripcion' => 'Juego de herramientas para taller de mantenimiento'
-            ]
         ];
 
         foreach ($solicitudes as $solicitud) {
-            $deptoSolicitado = DB::table('departamentos')
-                ->where('nombre_depto', $solicitud['dep_solicitado'])
-                ->first();
-
-            $deptoSolicitante = DB::table('departamentos')
-                ->where('nombre_depto', $solicitud['dep_solicitante'])
-                ->first();
-
-            // Obtener el jefe del depto solicitante
-            $trabajadorSolicitanteId = $deptoSolicitante?->jefe_depto_id;
-
             DB::table('solicitudes')->insert([
-                'depto_solicitado_id' => $deptoSolicitado->depto_id,
-                'depto_solicitante_id' => $deptoSolicitante->depto_id,
-                'trabajador_solicitante_id' => $trabajadorSolicitanteId,
-                'fecha_elaboracion' => $solicitud['fecha_elaboracion']->format('Y-m-d'),
-                'desc_servicio' => $solicitud['descripcion'],
+                'solicitud_id' => Str::uuid(),
+                'folio' => null, // Sin folio
+                'depto_solicitado_id' => $departamentos[$solicitud['depto_solicitado']],
+                'depto_solicitante_id' => $departamentos[$solicitud['depto_solicitante']],
+                'trabajador_solicitante_id' => $trabajadores[$solicitud['depto_solicitante']], // El jefe del depto solicitante
+                'desc_servicio' => $solicitud['desc_servicio'],
+                'esta_enviada' => false,
                 'created_at' => now(),
-                'updated_at' => now()
+                'updated_at' => now(),
             ]);
         }
-    }
 
-
-    protected function seedUsuarioAdmin(): void
-    {
         User::create([
             'name' => 'Francisco Miranda',
             'email' => 'frsamirandaja@ittepic.edu.mx',
