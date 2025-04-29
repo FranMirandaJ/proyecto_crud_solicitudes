@@ -9,6 +9,7 @@ import {
 import { MoreHorizontal } from "lucide-react";
 import { Button } from "@/Components/ui/button";
 import VerDetallesDialog from "@/Components/dialogs/VerDetallesDialog";
+import EditarSolicitudDialog from "./dialogs/EditarSolicitudDialog";
 
 export default function TablaListadoSolicitudes({ solicitudes, departamentos }) {
     return (
@@ -72,14 +73,17 @@ export default function TablaListadoSolicitudes({ solicitudes, departamentos }) 
                                         ) : (
                                             <>
                                                 <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-                                                <VerDetallesDialog
+                                                    <VerDetallesDialog
                                                         solicitud={solicitud}
                                                         departamentos={departamentos}
                                                     />
                                                 </DropdownMenuItem>
                                                 <DropdownMenuSeparator />
-                                                <DropdownMenuItem onClick={() => console.log('Editar solicitud')}>
-                                                    Editar
+                                                <DropdownMenuItem onClick={(e) => e.preventDefault()}>
+                                                    <EditarSolicitudDialog
+                                                        solicitud={solicitud}
+                                                        departamentos={departamentos}
+                                                    />
                                                 </DropdownMenuItem>
                                                 <DropdownMenuSeparator />
                                                 <DropdownMenuItem onClick={() => console.log('Enviar solicitud')}>

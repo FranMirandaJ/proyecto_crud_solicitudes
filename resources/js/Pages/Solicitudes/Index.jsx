@@ -21,7 +21,7 @@ export default function Index({ departamentos, solicitudes }) {
                     />
                     {/*----- FIN CODIGO DE VENTANA MODAL PARA CREAR SOLICITUDES ------*/}
 
-                </div>
+                </div> 
 
             }
         >

@@ -67,9 +67,16 @@ class SolicitudesController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Solicitudes $solicitudes)
+    public function update(SolicitudRequest $request, Solicitudes $solicitudes)
     {
-        //
+        // Solicitudes::updated($solicitudes->id, [
+        //     'depto_solicitado_id' => $request->depto_solicitado_id,
+        //     'depto_solicitante_id' => $request->depto_solicitante_id,
+        //     'desc_servicio' => $request->desc_servicio,
+        // ]);
+
+        
+
     }
 
     /**

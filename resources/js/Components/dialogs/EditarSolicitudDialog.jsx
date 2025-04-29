@@ -5,6 +5,8 @@ import {
     DialogContent,
     DialogHeader,
     DialogTitle,
+    DialogTrigger,
+    DialogFooter
 } from "@/components/ui/dialog";
 import {
     Select,
@@ -12,19 +14,21 @@ import {
     SelectItem,
     SelectTrigger,
     SelectValue,
+    SelectGroup,
+    SelectLabel
 } from "@/components/ui/select";
+import { Textarea } from "@headlessui/react";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { useForm } from "@inertiajs/react";
 import { toast } from "react-toastify";
+import { useState } from "react";
 
-export default function EditarSolicitudDialog({
-    solicitud,
-    departamentos,
-    open,
-    setOpen
-}) {
-    const { data, setData, errors, put, reset } = useForm({
+export default function EditarSolicitudDialog({ solicitud, departamentos }) {
+
+    const [open, setOpen] = useState(false)
+
+    const { data, setData, errors, patch, reset } = useForm({
         depto_solicitado_id: solicitud.depto_solicitado_id,
         depto_solicitante_id: solicitud.depto_solicitante_id,
         desc_servicio: solicitud.desc_servicio
@@ -32,7 +36,8 @@ export default function EditarSolicitudDialog({
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        put(route('solicitudes.update', solicitud.solicitud_id), {
+        console.log('que onda')
+        patch(route('solicitudes.update', solicitud.solicitud_id), {
             onSuccess: () => {
                 toast.success('Solicitud actualizada correctamente');
                 setOpen(false);
@@ -42,6 +47,12 @@ export default function EditarSolicitudDialog({
 
     return (
         <Dialog open={open} onOpenChange={setOpen}>
+            <DialogTrigger asChild>
+                <Button variant="ghost" className="w-full justify-start">
+                    Editar
+                </Button>
+            </DialogTrigger>
+
             <DialogContent className="sm:max-w-[600px]">
                 <form onSubmit={handleSubmit}>
                     <DialogHeader>
@@ -54,8 +65,8 @@ export default function EditarSolicitudDialog({
                             <Label htmlFor="depto_solicitado_id" className="text-right">
                                 Departamento Solicitado
                             </Label>
-                            <Select value={solicitudNueva.depto_solicitado_id} onValueChange={(value) =>
-                                setSolicitudNueva({ ...solicitudNueva, depto_solicitado_id: value })
+                            <Select value={data.depto_solicitado_id} onValueChange={(value) =>
+                                setData({ ...data, depto_solicitado_id: value })
                             }>
                                 <SelectTrigger id="depto_solicitado_id" className="col-span-3">
                                     <SelectValue placeholder="Seleccione un Departamento" />
@@ -83,8 +94,8 @@ export default function EditarSolicitudDialog({
                             <Label htmlFor="depto_solicitante_id" className="text-right">
                                 Departamento Solicitante
                             </Label>
-                            <Select value={solicitudNueva.depto_solicitante_id} onValueChange={(value) =>
-                                setSolicitudNueva({ ...solicitudNueva, depto_solicitante_id: value })
+                            <Select value={data.depto_solicitante_id} onValueChange={(value) =>
+                                setData({ ...data, depto_solicitante_id: value })
                             }>
                                 <SelectTrigger id="depto_solicitante_id" className="col-span-3">
                                     <SelectValue placeholder="Seleccione un Departamento" />
@@ -115,9 +126,9 @@ export default function EditarSolicitudDialog({
                                 placeholder="Escribe una descripción del servicio"
                                 className="col-span-3"
                                 rows={4}
-                                value={solicitudNueva.desc_servicio}
+                                value={data.desc_servicio}
                                 onChange={(e) =>
-                                    setSolicitudNueva({ ...solicitudNueva, desc_servicio: e.target.value })
+                                    setData({ ...data, desc_servicio: e.target.value })
                                 }
                             />
                             {errors.desc_servicio && (
