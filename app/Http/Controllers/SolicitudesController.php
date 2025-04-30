@@ -22,7 +22,6 @@ class SolicitudesController extends Controller
         $this->solicitudesQueryes = $solicitudesQueryes;
     }
 
-
     /**
      * Display a listing of the resource.
      */
@@ -31,7 +30,7 @@ class SolicitudesController extends Controller
 
         $solicitudes = $this->solicitudesQueryes->getSolicitudes();
 
-        dd($solicitudes);
+        //dd($solicitudes);
 
         return Inertia::render('Solicitudes/Index', [
             //'departamentos' => Departamentos::all(),
