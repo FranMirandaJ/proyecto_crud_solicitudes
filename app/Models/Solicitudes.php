@@ -6,6 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Solicitudes extends Model
 {
+
+    protected $primaryKey = 'solicitud_id';
+
     protected $fillable = [
         'depto_solicitado_id',
         'depto_solicitante_id',
@@ -13,5 +16,5 @@ class Solicitudes extends Model
         'desc_servicio',
         'trabajador_solicitante_id'
     ];
-    
+
 }

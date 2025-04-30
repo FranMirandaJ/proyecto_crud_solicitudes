@@ -3,52 +3,57 @@
 import {
     Dialog,
     DialogContent,
+    DialogDescription,
+    DialogFooter,
     DialogHeader,
     DialogTitle,
-    DialogTrigger,
-    DialogFooter
+    DialogTrigger
 } from "@/components/ui/dialog";
 import {
     Select,
     SelectContent,
+    SelectGroup,
     SelectItem,
+    SelectLabel,
     SelectTrigger,
     SelectValue,
-    SelectGroup,
-    SelectLabel
 } from "@/components/ui/select";
-import { Textarea } from "@headlessui/react";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { useForm } from "@inertiajs/react";
+import { Textarea } from "@/components/ui/textarea";
 import { toast } from "react-toastify";
 import { useState } from "react";
+import { useForm } from "@inertiajs/react";
 
 export default function EditarSolicitudDialog({ solicitud, departamentos }) {
 
-    const [open, setOpen] = useState(false)
+    const [open, setOpen] = useState(false);
 
-    const { data, setData, errors, patch, reset } = useForm({
+    const { data, setData, errors, reset, put, processing } = useForm({
         depto_solicitado_id: solicitud.depto_solicitado_id,
         depto_solicitante_id: solicitud.depto_solicitante_id,
-        desc_servicio: solicitud.desc_servicio
+        desc_servicio: solicitud.desc_servicio || ""
     });
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        console.log('que onda')
-        patch(route('solicitudes.update', solicitud.solicitud_id), {
+    function handleSubmit(e) {
+        
+        e.preventDefault()
+
+        console.log('holaaaaaaaaaaa')
+
+        put(route('solicitudes.update', solicitud.solicitud_id), {
             onSuccess: () => {
-                toast.success('Solicitud actualizada correctamente');
-                setOpen(false);
+                reset()
+                setOpen(false)
+                toast.success('Solicitud actualizada correctamente')
             }
-        });
-    };
+        })
+    }
 
     return (
-        <Dialog open={open} onOpenChange={setOpen}>
+        <Dialog onOpenChange={setOpen} open={open}>
             <DialogTrigger asChild>
-                <Button variant="ghost" className="w-full justify-start">
+            <Button variant="ghost" className="w-full justify-start">
                     Editar
                 </Button>
             </DialogTrigger>
@@ -57,6 +62,9 @@ export default function EditarSolicitudDialog({ solicitud, departamentos }) {
                 <form onSubmit={handleSubmit}>
                     <DialogHeader>
                         <DialogTitle>Editar Solicitud</DialogTitle>
+                        <DialogDescription>
+                            Modifica los campos necesarios y presiona "Guardar cambios" para actualizar la solicitud.
+                        </DialogDescription>
                     </DialogHeader>
 
                     <div className="grid gap-4 py-4">
@@ -65,9 +73,11 @@ export default function EditarSolicitudDialog({ solicitud, departamentos }) {
                             <Label htmlFor="depto_solicitado_id" className="text-right">
                                 Departamento Solicitado
                             </Label>
-                            <Select value={data.depto_solicitado_id} onValueChange={(value) =>
-                                setData({ ...data, depto_solicitado_id: value })
-                            }>
+                            <Select
+                                value={data.depto_solicitado_id}
+                                onValueChange={(value) => setData('depto_solicitado_id', value)}
+                                disabled={processing}
+                            >
                                 <SelectTrigger id="depto_solicitado_id" className="col-span-3">
                                     <SelectValue placeholder="Seleccione un Departamento" />
                                 </SelectTrigger>
@@ -94,9 +104,11 @@ export default function EditarSolicitudDialog({ solicitud, departamentos }) {
                             <Label htmlFor="depto_solicitante_id" className="text-right">
                                 Departamento Solicitante
                             </Label>
-                            <Select value={data.depto_solicitante_id} onValueChange={(value) =>
-                                setData({ ...data, depto_solicitante_id: value })
-                            }>
+                            <Select
+                                value={data.depto_solicitante_id}
+                                onValueChange={(value) => setData('depto_solicitante_id', value)}
+                                disabled={processing}
+                            >
                                 <SelectTrigger id="depto_solicitante_id" className="col-span-3">
                                     <SelectValue placeholder="Seleccione un Departamento" />
                                 </SelectTrigger>
@@ -123,13 +135,12 @@ export default function EditarSolicitudDialog({ solicitud, departamentos }) {
                             </Label>
                             <Textarea
                                 id="desc_servicio"
-                                placeholder="Escribe una descripción del servicio"
                                 className="col-span-3"
                                 rows={4}
                                 value={data.desc_servicio}
-                                onChange={(e) =>
-                                    setData({ ...data, desc_servicio: e.target.value })
-                                }
+                                onChange={(e) => setData('desc_servicio', e.target.value)}
+                                disabled={processing}
+                                placeholder="Describa el servicio requerido"
                             />
                             {errors.desc_servicio && (
                                 <p className="text-sm text-red-500 col-span-4 ml-[calc(25%+1rem)]">{errors.desc_servicio}</p>
@@ -142,13 +153,14 @@ export default function EditarSolicitudDialog({ solicitud, departamentos }) {
                             type="button"
                             variant="outline"
                             onClick={() => setOpen(false)}
+                            disabled={processing}
                         >
                             Cancelar
                         </Button>
-                        <Button type="submit">Guardar Cambios</Button>
+                        <Button type="submit" disabled={processing}>
+                            {processing ? 'Guardando...' : 'Guardar cambios'}
+                        </Button>
                     </DialogFooter>
-
-
                 </form>
             </DialogContent>
         </Dialog>

@@ -61,21 +61,22 @@ class SolicitudesController extends Controller
      */
     public function edit(Solicitudes $solicitudes)
     {
-        //
+
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(SolicitudRequest $request, Solicitudes $solicitudes)
+    public function update(SolicitudRequest $request, Solicitudes $solicitud)
     {
-        // Solicitudes::updated($solicitudes->id, [
-        //     'depto_solicitado_id' => $request->depto_solicitado_id,
-        //     'depto_solicitante_id' => $request->depto_solicitante_id,
-        //     'desc_servicio' => $request->desc_servicio,
-        // ]);
 
-        
+        $solicitud = Solicitudes::find($solicitud->solicitud_id);
+
+        $solicitud->depto_solicitado_id = $request->depto_solicitado_id;
+        $solicitud->depto_solicitante_id = $request->depto_solicitante_id;
+        $solicitud->desc_servicio = $request->desc_servicio;
+
+        $solicitud->save();
 
     }
 
