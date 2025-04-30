@@ -4,22 +4,38 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\Solicitudes\SolicitudRequest;
 use App\Models\Departamentos;
+use App\Models\Queryes\SolicitudesQueryes;
 use App\Models\Solicitudes;
 use App\Models\Tipos_Solicitud;
 use App\Models\Trabajadores;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
+
 class SolicitudesController extends Controller
 {
+
+    protected $solicitudesQueryes;
+
+    public function __construct(SolicitudesQueryes $solicitudesQueryes)
+    {
+        $this->solicitudesQueryes = $solicitudesQueryes;
+    }
+
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
+
+        $solicitudes = $this->solicitudesQueryes->getSolicitudes();
+
+        dd($solicitudes);
+
         return Inertia::render('Solicitudes/Index', [
-            'departamentos' => Departamentos::all(),
-            'solicitudes' => Solicitudes::all(),
+            //'departamentos' => Departamentos::all(),
+            'solicitudes' => $solicitudes
         ]);
     }
 
@@ -70,13 +86,17 @@ class SolicitudesController extends Controller
     public function update(SolicitudRequest $request, Solicitudes $solicitud)
     {
 
-        $solicitud = Solicitudes::find($solicitud->solicitud_id);
+        dump("metodo update del controlador de solicitudes");
 
-        $solicitud->depto_solicitado_id = $request->depto_solicitado_id;
-        $solicitud->depto_solicitante_id = $request->depto_solicitante_id;
-        $solicitud->desc_servicio = $request->desc_servicio;
 
-        $solicitud->save();
+        $solicitudActualizada = Solicitudes::findOrFail($solicitud->id);
+
+
+        // $solicitudActualizada->update([
+        //     'depto_solicitado_id' => $request->depto_solicitado_id,
+        //     'depto_solicitante_id' => $request->depto_solicitante_id,
+        //     'desc_servicio' => $request->desc_servicio,
+        // ]);
 
     }
 

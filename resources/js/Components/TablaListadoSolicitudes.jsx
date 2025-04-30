@@ -81,6 +81,7 @@ export default function TablaListadoSolicitudes({ solicitudes, departamentos }) 
                                             </DropdownMenuItem>
                                             <DropdownMenuSeparator />
                                             <DropdownMenuItem onClick={(e) => e.preventDefault()}>
+
                                                 <EditarSolicitudDialog
                                                     solicitud={solicitud}
                                                     departamentos={departamentos}

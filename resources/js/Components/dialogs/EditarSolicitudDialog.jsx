@@ -39,8 +39,6 @@ export default function EditarSolicitudDialog({ solicitud, departamentos }) {
 
         e.preventDefault()
 
-        console.log(data)
-
         // put(route('solicitudes.update', solicitud.solicitud_id), {
         //     onSuccess: () => {
         //         reset()
