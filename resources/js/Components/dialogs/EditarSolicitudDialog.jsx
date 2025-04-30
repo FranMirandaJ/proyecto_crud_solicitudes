@@ -32,42 +32,44 @@ export default function EditarSolicitudDialog({ solicitud, departamentos }) {
     const { data, setData, errors, reset, put, processing } = useForm({
         depto_solicitado_id: solicitud.depto_solicitado_id,
         depto_solicitante_id: solicitud.depto_solicitante_id,
-        desc_servicio: solicitud.desc_servicio || ""
+        desc_servicio: String(solicitud.desc_servicio || "")
     });
 
     function handleSubmit(e) {
-        
+
         e.preventDefault()
 
-        console.log('holaaaaaaaaaaa')
+        console.log(data)
 
-        put(route('solicitudes.update', solicitud.solicitud_id), {
-            onSuccess: () => {
-                reset()
-                setOpen(false)
-                toast.success('Solicitud actualizada correctamente')
-            }
-        })
+        // put(route('solicitudes.update', solicitud.solicitud_id), {
+        //     onSuccess: () => {
+        //         reset()
+        //         setOpen(false)
+        //         toast.success('Solicitud actualizada correctamente')
+        //     }
+        // })
     }
 
     return (
         <Dialog onOpenChange={setOpen} open={open}>
             <DialogTrigger asChild>
-            <Button variant="ghost" className="w-full justify-start">
+                <Button variant="ghost" className="w-full justify-start">
                     Editar
                 </Button>
             </DialogTrigger>
 
             <DialogContent className="sm:max-w-[600px]">
-                <form onSubmit={handleSubmit}>
-                    <DialogHeader>
-                        <DialogTitle>Editar Solicitud</DialogTitle>
-                        <DialogDescription>
-                            Modifica los campos necesarios y presiona "Guardar cambios" para actualizar la solicitud.
-                        </DialogDescription>
-                    </DialogHeader>
 
+                <DialogHeader>
+                    <DialogTitle>Editar Solicitud</DialogTitle>
+                    <DialogDescription>
+                        Modifica los campos necesarios y presiona "Guardar cambios" para actualizar la solicitud.
+                    </DialogDescription>
+                </DialogHeader>
+
+                <form>
                     <div className="grid gap-4 py-4">
+
                         {/*=========== Departamento Solicitado ===========*/}
                         <div className="grid grid-cols-4 items-center gap-4">
                             <Label htmlFor="depto_solicitado_id" className="text-right">
@@ -76,7 +78,6 @@ export default function EditarSolicitudDialog({ solicitud, departamentos }) {
                             <Select
                                 value={data.depto_solicitado_id}
                                 onValueChange={(value) => setData('depto_solicitado_id', value)}
-                                disabled={processing}
                             >
                                 <SelectTrigger id="depto_solicitado_id" className="col-span-3">
                                     <SelectValue placeholder="Seleccione un Departamento" />
@@ -107,7 +108,6 @@ export default function EditarSolicitudDialog({ solicitud, departamentos }) {
                             <Select
                                 value={data.depto_solicitante_id}
                                 onValueChange={(value) => setData('depto_solicitante_id', value)}
-                                disabled={processing}
                             >
                                 <SelectTrigger id="depto_solicitante_id" className="col-span-3">
                                     <SelectValue placeholder="Seleccione un Departamento" />
@@ -139,7 +139,6 @@ export default function EditarSolicitudDialog({ solicitud, departamentos }) {
                                 rows={4}
                                 value={data.desc_servicio}
                                 onChange={(e) => setData('desc_servicio', e.target.value)}
-                                disabled={processing}
                                 placeholder="Describa el servicio requerido"
                             />
                             {errors.desc_servicio && (
@@ -157,12 +156,13 @@ export default function EditarSolicitudDialog({ solicitud, departamentos }) {
                         >
                             Cancelar
                         </Button>
-                        <Button type="submit" disabled={processing}>
-                            {processing ? 'Guardando...' : 'Guardar cambios'}
+                        <Button onClick={(e) => { handleSubmit(e) }}>
+                            Guardar cambios
                         </Button>
                     </DialogFooter>
                 </form>
             </DialogContent>
+
         </Dialog>
     );
 }
