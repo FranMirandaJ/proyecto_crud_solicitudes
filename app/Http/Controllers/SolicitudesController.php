@@ -4,22 +4,25 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\Solicitudes\SolicitudRequest;
 use App\Models\Departamentos;
-use App\Models\Queryes\SolicitudesQueryes;
 use App\Models\Solicitudes;
-use App\Models\Tipos_Solicitud;
-use App\Models\Trabajadores;
-use Illuminate\Http\Request;
 use Inertia\Inertia;
-
+use App\Models\Queryes\SolicitudesQueryes;
+use App\Models\Queryes\DepartamentosQueryes;
+use App\Models\Queryes\TrabajadoresQueryes;
+use Carbon\Carbon;
 
 class SolicitudesController extends Controller
 {
 
     protected $solicitudesQueryes;
+    protected $departamentosQueryes;
+    protected $trabajadoresQueryes;
 
-    public function __construct(SolicitudesQueryes $solicitudesQueryes)
+    public function __construct(SolicitudesQueryes $solicitudesQueryes, DepartamentosQueryes $departamentosQueryes, TrabajadoresQueryes $trabajadoresQueryes)
     {
         $this->solicitudesQueryes = $solicitudesQueryes;
+        $this->departamentosQueryes = $departamentosQueryes;
+        $this->trabajadoresQueryes = $trabajadoresQueryes;
     }
 
     /**
@@ -29,12 +32,13 @@ class SolicitudesController extends Controller
     {
 
         $solicitudes = $this->solicitudesQueryes->getSolicitudes();
+        $departamentos = $this->departamentosQueryes->getDepartamentos();
 
         //dd($solicitudes);
 
         return Inertia::render('Solicitudes/Index', [
-            //'departamentos' => Departamentos::all(),
-            'solicitudes' => $solicitudes
+            'solicitudes' => $solicitudes,
+            'departamentos' => $departamentos,
         ]);
     }
 
@@ -52,13 +56,14 @@ class SolicitudesController extends Controller
     public function store(SolicitudRequest $request)
     {
 
-        $trabajador_solicitante = Departamentos::where('depto_id', $request->depto_solicitante_id)->first()->jefe_depto_id;
+        $trabajador_solicitante_id = $this->departamentosQueryes->getJefeDeptoById($request->depto_solicitante_id);
 
-        Solicitudes::create([
+        $this->solicitudesQueryes->insertSolicitud((object)[
             'depto_solicitado_id' => $request->depto_solicitado_id,
             'depto_solicitante_id' => $request->depto_solicitante_id,
+            'trabajador_solicitante_id' => $trabajador_solicitante_id,
             'desc_servicio' => $request->desc_servicio,
-            'trabajador_solicitante_id' => $trabajador_solicitante
+            'created_at' => Carbon::now('America/Mazatlan')
         ]);
 
     }
@@ -82,28 +87,23 @@ class SolicitudesController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(SolicitudRequest $request, Solicitudes $solicitud)
+    public function update(SolicitudRequest $request)
     {
 
-        dump("metodo update del controlador de solicitudes");
-
-
-        $solicitudActualizada = Solicitudes::findOrFail($solicitud->id);
-
-
-        // $solicitudActualizada->update([
-        //     'depto_solicitado_id' => $request->depto_solicitado_id,
-        //     'depto_solicitante_id' => $request->depto_solicitante_id,
-        //     'desc_servicio' => $request->desc_servicio,
-        // ]);
+        $this->solicitudesQueryes->updateSolicitud((object)[
+            'depto_solicitado_id' => $request->depto_solicitado_id,
+            'depto_solicitante_id' => $request->depto_solicitante_id,
+            'desc_servicio' => $request->desc_servicio,
+            'updated_at' => Carbon::now('America/Mazatlan'),
+        ], $request->solicitud_id);
 
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Solicitudes $solicitudes)
+    public function destroy($id)
     {
-        //
+        $this->solicitudesQueryes->deleteSolicitud($id);
     }
 }

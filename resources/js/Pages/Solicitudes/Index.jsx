@@ -5,8 +5,8 @@ import TablaListadoSolicitudes from "@/Components/TablaListadoSolicitudes";
 
 export default function Index({ departamentos, solicitudes }) {
 
-    console.log("departamentos en index = ", departamentos);
-    console.log("solicitudes en index = ", solicitudes);
+    // console.log("departamentos en index = ", departamentos);
+    // console.log("solicitudes en index = ", solicitudes);
 
     return (
         <AuthenticatedLayout
@@ -35,7 +35,6 @@ export default function Index({ departamentos, solicitudes }) {
 
                             <div className="relative overflow-x-auto">
                                 {/*----- CODIGO DE LA TABLA QUE LISTA LAS SOLICITUDES EXISTENTES -----*/}
-                                {console.log("solicitudes en index = ", solicitudes)}
                                 <TablaListadoSolicitudes
                                     solicitudes={solicitudes}
                                     departamentos={departamentos}

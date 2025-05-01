@@ -42,6 +42,8 @@ export default function CrearSolicitudDialog({ departamentos}) {
                     reset()
                     setOpen(false)
                     toast.success('Solicitud creada con éxito')
+                }, onError: () => {
+                    toast.error('Error al crear la solicitud')
                 }
             })
     }

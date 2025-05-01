@@ -30,6 +30,7 @@ export default function EditarSolicitudDialog({ solicitud, departamentos }) {
     const [open, setOpen] = useState(false);
 
     const { data, setData, errors, reset, put, processing } = useForm({
+        solicitud_id: solicitud.solicitud_id,
         depto_solicitado_id: solicitud.depto_solicitado_id,
         depto_solicitante_id: solicitud.depto_solicitante_id,
         desc_servicio: String(solicitud.desc_servicio || "")
@@ -39,13 +40,14 @@ export default function EditarSolicitudDialog({ solicitud, departamentos }) {
 
         e.preventDefault()
 
-        // put(route('solicitudes.update', solicitud.solicitud_id), {
-        //     onSuccess: () => {
-        //         reset()
-        //         setOpen(false)
-        //         toast.success('Solicitud actualizada correctamente')
-        //     }
-        // })
+        put(route('solicitudes.update', solicitud.solicitud_id), {
+            onSuccess: () => {
+                setOpen(false)
+                toast.success('Solicitud actualizada correctamente')
+            }, onError: () => {
+                toast.error('Error al actualizar la solicitud')
+            }
+        })
     }
 
     return (

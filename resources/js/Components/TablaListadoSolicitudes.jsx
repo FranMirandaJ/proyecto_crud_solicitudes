@@ -20,8 +20,10 @@ import { MoreHorizontal } from "lucide-react";
 import { Button } from "@/Components/ui/button";
 import VerDetallesDialog from "@/Components/dialogs/VerDetallesDialog";
 import EditarSolicitudDialog from "./dialogs/EditarSolicitudDialog";
+import { EliminarSolicitudAlertDialog } from "./dialogs/EliminarSolicitudAlertDialog";
 
 export default function TablaListadoSolicitudes({ solicitudes, departamentos }) {
+
     return (
         <Table>
             <TableHeader>
@@ -89,11 +91,15 @@ export default function TablaListadoSolicitudes({ solicitudes, departamentos }) 
                                             </DropdownMenuItem>
                                             <DropdownMenuSeparator />
                                             <DropdownMenuItem onClick={() => console.log('Enviar solicitud')}>
-                                                Enviar Solicitud
+                                                <Button variant="ghost" className="w-full justify-start">
+                                                    Enviar Solicitud
+                                                </Button>
                                             </DropdownMenuItem>
                                             <DropdownMenuSeparator />
-                                            <DropdownMenuItem onClick={() => console.log('Eliminar solicitud')}>
-                                                Eliminar
+                                            <DropdownMenuItem onClick={(e) => e.preventDefault()}>
+                                                <EliminarSolicitudAlertDialog
+                                                    solicitud={solicitud}
+                                                />
                                             </DropdownMenuItem>
                                         </>
 
