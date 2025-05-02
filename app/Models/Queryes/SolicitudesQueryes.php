@@ -11,7 +11,7 @@ class SolicitudesQueryes extends Model
 
     public function getSolicitudes()
     {
-        $query = "SELECT s.solicitud_id, s.folio, s.depto_solicitado_id, s.depto_solicitante_id, s.trabajador_solicitante_id, s.desc_servicio, s.created_at FROM `solicitudes` as s;";
+        $query = "SELECT s.solicitud_id, s.folio, s.depto_solicitado_id, s.depto_solicitante_id, s.trabajador_solicitante_id, s.desc_servicio, s.created_at, s.esta_enviada FROM `solicitudes` as s;";
 
         $resultado = DB::select($query);
 
@@ -51,8 +51,12 @@ class SolicitudesQueryes extends Model
     }
 
     public function updateSolicitud($data, $id) {
-        $query = "UPDATE solicitudes SET depto_solicitado_id = ?, depto_solicitante_id = ?,
-         desc_servicio = ?, updated_at = ? WHERE solicitud_id = ?";
+        $query = "UPDATE solicitudes
+                  SET depto_solicitado_id = ?,
+                      depto_solicitante_id = ?,
+                      desc_servicio = ?,
+                      updated_at = ?
+                  WHERE solicitud_id = ?";
 
         DB::update($query, [
             $data->depto_solicitado_id,
@@ -62,6 +66,20 @@ class SolicitudesQueryes extends Model
             $id
         ]);
     }
+
+    public function updateEstadoSolicitud($data, $id) {
+        $query = "UPDATE solicitudes
+                  SET esta_enviada = ?,
+                      updated_at = ?
+                  WHERE solicitud_id = ?";
+
+        DB::update($query, [
+            $data->esta_enviada,
+            $data->updated_at,
+            $id
+        ]);
+    }
+
 
     public function deleteSolicitud($id) {
         $query = "DELETE FROM `solicitudes` WHERE solicitud_id = ?;";

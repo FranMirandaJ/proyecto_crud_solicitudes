@@ -21,17 +21,18 @@ import { Button } from "@/Components/ui/button";
 import VerDetallesDialog from "@/Components/dialogs/VerDetallesDialog";
 import EditarSolicitudDialog from "./dialogs/EditarSolicitudDialog";
 import { EliminarSolicitudAlertDialog } from "./dialogs/EliminarSolicitudAlertDialog";
+import { EnviarSolicitudAlertDialog } from "./dialogs/EnviarSolicitudAlertDialog";
 
 export default function TablaListadoSolicitudes({ solicitudes, departamentos }) {
-
     return (
         <Table>
             <TableHeader>
                 <TableRow>
                     <TableHead className="w-[100px]">No. de Folio</TableHead>
                     <TableHead>Fecha de Elaboración</TableHead>
-                    <TableHead>Departamento Solicitante</TableHead>
                     <TableHead>Departamento Solicitado</TableHead>
+                    <TableHead>Departamento Solicitante</TableHead>
+                    <TableHead>Enviada</TableHead>
                     <TableHead></TableHead>
                 </TableRow>
             </TableHeader>
@@ -46,8 +47,13 @@ export default function TablaListadoSolicitudes({ solicitudes, departamentos }) 
                             hour: '2-digit',
                             minute: '2-digit',
                         })}</TableCell>
-                        <TableCell>{departamentos.find(depto => depto.depto_id === solicitud.depto_solicitante_id)?.nombre_depto}</TableCell>
                         <TableCell>{departamentos.find(depto => depto.depto_id === solicitud.depto_solicitado_id)?.nombre_depto}</TableCell>
+                        <TableCell>{departamentos.find(depto => depto.depto_id === solicitud.depto_solicitante_id)?.nombre_depto}</TableCell>
+                        <TableCell>{solicitud.esta_enviada === 1 ? (
+                            <span>Sí</span>
+                        ) : (
+                            <span>No</span>
+                        )}</TableCell>
                         <TableCell>
                             <DropdownMenu>
                                 <DropdownMenuTrigger asChild>
@@ -60,6 +66,7 @@ export default function TablaListadoSolicitudes({ solicitudes, departamentos }) 
                                     <DropdownMenuLabel>Acciones</DropdownMenuLabel>
 
                                     {solicitud.folio ? (
+                                        // Tiene folio: Ver + PDF
                                         <>
                                             <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
                                                 <VerDetallesDialog
@@ -72,8 +79,19 @@ export default function TablaListadoSolicitudes({ solicitudes, departamentos }) 
                                                 Generar PDF
                                             </DropdownMenuItem>
                                         </>
+                                    ) : solicitud.esta_enviada ? (
 
+                                        // Enviada pero sin folio: Solo Ver
+                                        <>
+                                            <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+                                                <VerDetallesDialog
+                                                    solicitud={solicitud}
+                                                    departamentos={departamentos}
+                                                />
+                                            </DropdownMenuItem>
+                                        </>
                                     ) : (
+                                        // Ni enviada ni con folio: todas las opciones
                                         <>
                                             <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
                                                 <VerDetallesDialog
@@ -83,17 +101,16 @@ export default function TablaListadoSolicitudes({ solicitudes, departamentos }) 
                                             </DropdownMenuItem>
                                             <DropdownMenuSeparator />
                                             <DropdownMenuItem onClick={(e) => e.preventDefault()}>
-
                                                 <EditarSolicitudDialog
                                                     solicitud={solicitud}
                                                     departamentos={departamentos}
                                                 />
                                             </DropdownMenuItem>
                                             <DropdownMenuSeparator />
-                                            <DropdownMenuItem onClick={() => console.log('Enviar solicitud')}>
-                                                <Button variant="ghost" className="w-full justify-start">
-                                                    Enviar Solicitud
-                                                </Button>
+                                            <DropdownMenuItem onClick={(e) => e.preventDefault()}>
+                                                <EnviarSolicitudAlertDialog
+                                                    solicitud={solicitud}
+                                                />
                                             </DropdownMenuItem>
                                             <DropdownMenuSeparator />
                                             <DropdownMenuItem onClick={(e) => e.preventDefault()}>
@@ -102,10 +119,9 @@ export default function TablaListadoSolicitudes({ solicitudes, departamentos }) 
                                                 />
                                             </DropdownMenuItem>
                                         </>
-
                                     )}
-
                                 </DropdownMenuContent>
+
                             </DropdownMenu>
                         </TableCell>
                     </TableRow>

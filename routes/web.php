@@ -11,6 +11,9 @@ Route::resource('solicitudes', SolicitudesController::class)
     ->middleware(['auth', 'verified'])
     ->names('solicitudes');
 
+Route::put('/solicitudes/{solicitud}/enviar', [SolicitudesController::class, 'send'])->name('solicitudes.send');
+
+
 Route::resource('generar_folio', GenerarFolioController::class)
     ->middleware(['auth', 'verified'])
     ->only(['index', 'store'])
@@ -39,4 +42,4 @@ Route::middleware('auth')->group(function () {
 
 
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

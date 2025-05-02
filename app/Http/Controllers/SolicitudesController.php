@@ -10,6 +10,7 @@ use App\Models\Queryes\SolicitudesQueryes;
 use App\Models\Queryes\DepartamentosQueryes;
 use App\Models\Queryes\TrabajadoresQueryes;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
 
 class SolicitudesController extends Controller
 {
@@ -45,10 +46,7 @@ class SolicitudesController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
-    {
-
-    }
+    public function create() {}
 
     /**
      * Store a newly created resource in storage.
@@ -65,7 +63,6 @@ class SolicitudesController extends Controller
             'desc_servicio' => $request->desc_servicio,
             'created_at' => Carbon::now('America/Mazatlan')
         ]);
-
     }
 
     /**
@@ -79,10 +76,7 @@ class SolicitudesController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Solicitudes $solicitudes)
-    {
-
-    }
+    public function edit(Solicitudes $solicitudes) {}
 
     /**
      * Update the specified resource in storage.
@@ -96,7 +90,14 @@ class SolicitudesController extends Controller
             'desc_servicio' => $request->desc_servicio,
             'updated_at' => Carbon::now('America/Mazatlan'),
         ], $request->solicitud_id);
+    }
 
+    public function send(Request $request, $id)
+    {
+        $this->solicitudesQueryes->updateEstadoSolicitud((object)[
+            'esta_enviada' => true,
+            'updated_at' => Carbon::now('America/Mazatlan'),
+        ], $id);
     }
 
     /**
