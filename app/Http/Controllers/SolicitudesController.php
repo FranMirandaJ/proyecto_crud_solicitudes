@@ -102,9 +102,14 @@ class SolicitudesController extends Controller
     }
 
     public function setFolio(Request $request, $id){
+
+        dd($id);
+
+        $folio = 1;
+
         $this->solicitudesQueryes->updateFolioSolicitud((Object)[
-            'folio' => $request->folio,
-            'updated_at' => $request->Carbon::now()
+            'folio' => $folio,
+            'updated_at' => Carbon::now('America/Mazatlan')
         ], $id);
     }
 
