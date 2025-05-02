@@ -33,7 +33,7 @@ export default function EditarSolicitudDialog({ solicitud, departamentos }) {
         solicitud_id: solicitud.solicitud_id,
         depto_solicitado_id: solicitud.depto_solicitado_id,
         depto_solicitante_id: solicitud.depto_solicitante_id,
-        desc_servicio: String(solicitud.desc_servicio || "")
+        desc_servicio: solicitud.desc_servicio
     });
 
     function handleSubmit(e) {
@@ -58,7 +58,7 @@ export default function EditarSolicitudDialog({ solicitud, departamentos }) {
                 </Button>
             </DialogTrigger>
 
-            <DialogContent className="sm:max-w-[600px]">
+            <DialogContent className="sm:max-w-[600px]" onKeyDown={(e) => e.stopPropagation()}>
 
                 <DialogHeader>
                     <DialogTitle>Editar Solicitud</DialogTitle>
@@ -138,7 +138,10 @@ export default function EditarSolicitudDialog({ solicitud, departamentos }) {
                                 className="col-span-3"
                                 rows={4}
                                 value={data.desc_servicio}
-                                onChange={(e) => setData('desc_servicio', e.target.value)}
+                                onChange={(e) => {
+                                    //console.log(e.target.value);
+                                    setData('desc_servicio', e.target.value);
+                                  }}
                                 placeholder="Describa el servicio requerido"
                             />
                             {errors.desc_servicio && (
