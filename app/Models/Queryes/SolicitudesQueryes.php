@@ -80,6 +80,18 @@ class SolicitudesQueryes extends Model
         ]);
     }
 
+    public function updateFolioSolicitud($data, $id) {
+        $query = "UPDATE solicitudes
+                  SET folio = ?,
+                      updated_at = ?
+                  WHERE solicitud_id = ?";
+
+        DB::update($query, [
+            $data->folio,
+            $data->updated_at,
+            $id
+        ]);
+    }
 
     public function deleteSolicitud($id) {
         $query = "DELETE FROM `solicitudes` WHERE solicitud_id = ?;";

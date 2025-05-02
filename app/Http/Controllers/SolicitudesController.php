@@ -90,6 +90,7 @@ class SolicitudesController extends Controller
             'desc_servicio' => $request->desc_servicio,
             'updated_at' => Carbon::now('America/Mazatlan'),
         ], $request->solicitud_id);
+
     }
 
     public function send(Request $request, $id)
@@ -97,6 +98,13 @@ class SolicitudesController extends Controller
         $this->solicitudesQueryes->updateEstadoSolicitud((object)[
             'esta_enviada' => true,
             'updated_at' => Carbon::now('America/Mazatlan'),
+        ], $id);
+    }
+
+    public function setFolio(Request $request, $id){
+        $this->solicitudesQueryes->updateFolioSolicitud((Object)[
+            'folio' => $request->folio,
+            'updated_at' => $request->Carbon::now()
         ], $id);
     }
 

@@ -10,9 +10,8 @@ use Inertia\Inertia;
 Route::resource('solicitudes', SolicitudesController::class)
     ->middleware(['auth', 'verified'])
     ->names('solicitudes');
-
 Route::put('/solicitudes/{solicitud}/enviar', [SolicitudesController::class, 'send'])->name('solicitudes.send');
-
+Route::put('/solicitudes/{solicitud}/setFolio', [SolicitudesController::class, 'setFolio'])->name('solicitudes.setFolio');
 
 Route::resource('generar_folio', GenerarFolioController::class)
     ->middleware(['auth', 'verified'])
