@@ -22,6 +22,7 @@ import { MoreHorizontal } from "lucide-react";
 import { Button } from "@/Components/ui/button";
 import VerDetallesDialog from "@/Components/dialogs/VerDetallesDialog";
 import { router } from "@inertiajs/react";
+import { toast } from "react-toastify";
 
 export default function Index({ solicitudes, departamentos }) {
 
@@ -91,17 +92,19 @@ export default function Index({ solicitudes, departamentos }) {
                                                             <DropdownMenuItem>
                                                                 <Button variant="ghost" className="w-full justify-start"
                                                                     onClick={() => {
-                                                                        router.put(route("solicitudes.setFolio"), solicitud.solicitud_id,
-                                                                        {
-                                                                            onSuccess: () => {
-                                                                                reset()
-                                                                                setOpen(false)
-                                                                                toast.success('Folio generado y asignado con éxito')
-                                                                            }, onError: (e) => {
-                                                                                toast.error('Error al generar el folio')
-                                                                                console.log(e)
+                                                                        router.put(
+                                                                            route("solicitudes.setFolio", { solicitud: solicitud.solicitud_id }), // 1. Ruta con parámetro
+                                                                            {}, // 2. Datos enviados al backend
+                                                                            {
+                                                                                onSuccess: () => {
+                                                                                    toast.success('Folio generado y asignado con éxito');
+                                                                                },
+                                                                                onError: (e) => {
+                                                                                    toast.error('Error al generar el folio');
+                                                                                    console.log(e);
+                                                                                }
                                                                             }
-                                                                        })
+                                                                        );
                                                                     }}
                                                                 >
                                                                     Asignar Folio

@@ -54,12 +54,9 @@ class SolicitudesController extends Controller
     public function store(SolicitudRequest $request)
     {
 
-        $trabajador_solicitante_id = $this->departamentosQueryes->getJefeDeptoById($request->depto_solicitante_id);
-
         $this->solicitudesQueryes->insertSolicitud((object)[
             'depto_solicitado_id' => $request->depto_solicitado_id,
             'depto_solicitante_id' => $request->depto_solicitante_id,
-            'trabajador_solicitante_id' => $trabajador_solicitante_id,
             'desc_servicio' => $request->desc_servicio,
             'created_at' => Carbon::now('America/Mazatlan')
         ]);
@@ -84,16 +81,17 @@ class SolicitudesController extends Controller
     public function update(SolicitudRequest $request)
     {
 
+
+
         $this->solicitudesQueryes->updateSolicitud((object)[
             'depto_solicitado_id' => $request->depto_solicitado_id,
             'depto_solicitante_id' => $request->depto_solicitante_id,
             'desc_servicio' => $request->desc_servicio,
             'updated_at' => Carbon::now('America/Mazatlan'),
         ], $request->solicitud_id);
-
     }
 
-    public function send(Request $request, $id)
+    public function send($id)
     {
         $this->solicitudesQueryes->updateEstadoSolicitud((object)[
             'esta_enviada' => true,
@@ -101,14 +99,21 @@ class SolicitudesController extends Controller
         ], $id);
     }
 
-    public function setFolio(Request $request, $id){
+    public function setFolio($id)
+    {
 
-        dd($id);
+        $año = Carbon::now('America/Mazatlan')->year;
+        $prefijo = "CC{$año}1-";
+        $ultimoFolio = $this->solicitudesQueryes->getLastFolio();
 
-        $folio = 1;
+        $consecutivo = $ultimoFolio && preg_match('/-(\d+)$/', $ultimoFolio->folio, $matches)
+            ? intval($matches[1]) + 1
+            : 1;
 
-        $this->solicitudesQueryes->updateFolioSolicitud((Object)[
-            'folio' => $folio,
+        $folioFinal = $prefijo . str_pad($consecutivo, 3, '0', STR_PAD_LEFT);
+
+        $this->solicitudesQueryes->updateFolioSolicitud((object)[
+            'folio' => $folioFinal,
             'updated_at' => Carbon::now('America/Mazatlan')
         ], $id);
     }

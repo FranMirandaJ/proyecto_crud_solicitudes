@@ -72,6 +72,16 @@ export default function VerDetallesDialog({ solicitud, departamentos }) {
                         />
                     </div>
 
+                    {/* === Solicitante === */}
+                    <div className="grid grid-cols-4 items-center gap-4">
+                        <Label className="text-right">Nombre del Solicitante</Label>
+                        <Input
+                            readOnly
+                            value={solicitud.jefe_solicitante}
+                            className="col-span-3"
+                        />
+                    </div>
+
                     {/* === Departamento Solicitado === */}
                     <div className="grid grid-cols-4 items-center gap-4">
                         <Label className="text-right">Departamento Solicitado</Label>

@@ -52,8 +52,7 @@ class DatabaseSeeder extends Seeder
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);
-
-            $trabajadores[$nombreDepto] = $trabajadorId;
+            
             $departamentos[$nombreDepto] = $deptoId;
         }
 
@@ -82,7 +81,6 @@ class DatabaseSeeder extends Seeder
                 'folio' => null, // Sin folio
                 'depto_solicitado_id' => $departamentos[$solicitud['depto_solicitado']],
                 'depto_solicitante_id' => $departamentos[$solicitud['depto_solicitante']],
-                'trabajador_solicitante_id' => $trabajadores[$solicitud['depto_solicitante']], // El jefe del depto solicitante
                 'desc_servicio' => $solicitud['desc_servicio'],
                 'esta_enviada' => false,
                 'created_at' => now(),

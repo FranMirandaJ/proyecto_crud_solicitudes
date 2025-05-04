@@ -33,7 +33,7 @@ export default function EditarSolicitudDialog({ solicitud, departamentos }) {
         solicitud_id: solicitud.solicitud_id,
         depto_solicitado_id: solicitud.depto_solicitado_id,
         depto_solicitante_id: solicitud.depto_solicitante_id,
-        desc_servicio: solicitud.desc_servicio
+        desc_servicio: solicitud.desc_servicio,
     });
 
     function handleSubmit(e) {
