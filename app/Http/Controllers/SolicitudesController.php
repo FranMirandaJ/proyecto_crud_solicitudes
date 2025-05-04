@@ -9,6 +9,7 @@ use Inertia\Inertia;
 use App\Models\Queryes\SolicitudesQueryes;
 use App\Models\Queryes\DepartamentosQueryes;
 use App\Models\Queryes\TrabajadoresQueryes;
+use Barryvdh\DomPDF\PDF;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -124,5 +125,28 @@ class SolicitudesController extends Controller
     public function destroy($id)
     {
         $this->solicitudesQueryes->deleteSolicitud($id);
+    }
+
+    public function generarPDF($id)
+    {
+        $dataSolicitud = $this->solicitudesQueryes->getSolicitudById($id);
+        //dd($dataSolicitud);
+
+        $deptoSolicitante = $this->solicitudesQueryes->getNombreDepto($dataSolicitud->depto_solicitante_id);
+        //dd($deptoSolicitante);
+        $deptoSolicitado = $this->solicitudesQueryes->getNombreDepto($dataSolicitud->depto_solicitado_id);
+        //dd($deptoSolicitado);
+        $folio = $dataSolicitud->folio;
+        //dd($folio);
+        $nombreSolicitante = $this->departamentosQueryes->getNombreSolicitante($dataSolicitud->depto_solicitante_id);
+        //dd($nombreSolicitante);
+        $fechaElaboracion = Carbon::now("America/Mazatlan");
+        //dd($fechaElaboracion);
+        $descripcion = $dataSolicitud->desc_servicio;
+        //dd($descripcion);
+
+        $pdf = app('dompdf.wrapper');
+        $pdf->loadView('Solicitudes.pdf', compact('deptoSolicitante', 'deptoSolicitado', 'folio', 'nombreSolicitante', 'fechaElaboracion', 'descripcion'));
+        return $pdf->stream('x.pdf');
     }
 }

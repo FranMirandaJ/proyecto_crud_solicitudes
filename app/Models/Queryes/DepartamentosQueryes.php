@@ -24,4 +24,20 @@ class DepartamentosQueryes extends Model
         return count($resultado) > 0 ? $resultado[0]->jefe_depto_id : null;
     }
 
+    public function getNombreSolicitante($id)
+    {
+        $query = "SELECT t.nombre_trabajador
+                FROM `solicitudes` AS s
+                JOIN departamentos AS d ON s.depto_solicitante_id = d.depto_id
+                JOIN trabajadores AS t ON d.jefe_depto_id = t.trabajador_id
+                WHERE s.depto_solicitante_id = ?;";
+
+        $resultado = DB::select($query,[$id]);
+        if (count($resultado) > 0) {
+            return $resultado[0];
+        } else {
+            return [];
+        }
+    }
+
 }

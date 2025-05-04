@@ -36,7 +36,7 @@ class SolicitudesQueryes extends Model
     public function getSolicitudById($id)
     {
         $query = "SELECT s.solicitud_id, s.folio, s.depto_solicitado_id, s.depto_solicitante_id,
-            s.trabajador_solicitante_id, s.desc_servicio, s.created_at
+            s.desc_servicio, s.created_at
             FROM `solicitudes` as s WHERE s.solicitud_id = ?;";
 
         $resultado = DB::select($query, [$id]);
@@ -125,4 +125,21 @@ class SolicitudesQueryes extends Model
             return [];
         }
     }
+
+    public function getNombreDepto($id)
+    {
+        $query = "SELECT d.nombre_depto
+                    FROM `solicitudes` AS s
+                    JOIN departamentos AS d ON s.depto_solicitante_id = d.depto_id
+                    WHERE s.depto_solicitante_id = ?;";
+
+        $resultado = DB::select($query,[$id]);
+        if (count($resultado) > 0) {
+            return $resultado[0];
+        } else {
+            return [];
+        }
+    }
+
+
 }

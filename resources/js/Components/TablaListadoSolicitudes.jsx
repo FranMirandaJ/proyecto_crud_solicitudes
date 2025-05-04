@@ -22,6 +22,7 @@ import VerDetallesDialog from "@/Components/dialogs/VerDetallesDialog";
 import EditarSolicitudDialog from "./dialogs/EditarSolicitudDialog";
 import { EliminarSolicitudAlertDialog } from "./dialogs/EliminarSolicitudAlertDialog";
 import { EnviarSolicitudAlertDialog } from "./dialogs/EnviarSolicitudAlertDialog";
+import { router } from "@inertiajs/react";
 
 export default function TablaListadoSolicitudes({ solicitudes, departamentos }) {
     return (
@@ -75,8 +76,23 @@ export default function TablaListadoSolicitudes({ solicitudes, departamentos }) 
                                                 />
                                             </DropdownMenuItem>
                                             <DropdownMenuSeparator />
-                                            <DropdownMenuItem onClick={() => console.log('Generar PDF')}>
-                                                Generar PDF
+                                            <DropdownMenuItem onClick={(e) => e.preventDefault()}>
+                                                <Button variant="ghost" className="w-full justify-start"
+                                                    onClick={() => {
+                                                        console.log('Generar PDF')
+                                                        router.get(route('solicitudes.pdf', solicitud.solicitud_id), {}, {
+                                                            onSuccess: () => {
+                                                                toast.success('PDF Generado correctamente')
+                                                            },
+                                                            onError: (error) => {
+                                                                console.error("Errores del servidor:", error)
+                                                                toast.error('Error al generar archivo')
+                                                            }
+                                                        })
+                                                    }}
+                                                >
+                                                    Generar PDF
+                                                </Button>
                                             </DropdownMenuItem>
                                         </>
                                     ) : solicitud.esta_enviada ? (
