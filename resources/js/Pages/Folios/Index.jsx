@@ -11,9 +11,7 @@ import {
 import {
     Table,
     TableBody,
-    TableCaption,
     TableCell,
-    TableFooter,
     TableHead,
     TableHeader,
     TableRow,
@@ -26,7 +24,7 @@ import { toast } from "react-toastify";
 
 export default function Index({ solicitudes, departamentos }) {
 
-    // No. Folio => CC20251-066
+    // No. Folio de ejemplo => CC20251-066
 
     //console.log(solicitudes)
     return (

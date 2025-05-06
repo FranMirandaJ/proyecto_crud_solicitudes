@@ -9,9 +9,11 @@ use Inertia\Inertia;
 use App\Models\Queryes\SolicitudesQueryes;
 use App\Models\Queryes\DepartamentosQueryes;
 use App\Models\Queryes\TrabajadoresQueryes;
-use Barryvdh\DomPDF\PDF;
+//use Barryvdh\DomPDF\PDF;
+use Barryvdh\DomPDF\PDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 
 class SolicitudesController extends Controller
 {
@@ -127,26 +129,42 @@ class SolicitudesController extends Controller
         $this->solicitudesQueryes->deleteSolicitud($id);
     }
 
-    public function generarPDF($id)
+    public function generarPDF(Request $request)
     {
-        $dataSolicitud = $this->solicitudesQueryes->getSolicitudById($id);
-        //dd($dataSolicitud);
 
-        $deptoSolicitante = $this->solicitudesQueryes->getNombreDepto($dataSolicitud->depto_solicitante_id);
+        $data = json_decode($request->datosSolicitud);
+
+        //dd($data); // para probar
+
+        $deptoSolicitante = $data->depto_solicitante;
         //dd($deptoSolicitante);
-        $deptoSolicitado = $this->solicitudesQueryes->getNombreDepto($dataSolicitud->depto_solicitado_id);
+        $deptoSolicitado =$data->depto_solicitado;
         //dd($deptoSolicitado);
-        $folio = $dataSolicitud->folio;
+        $folio = $data->folio;
         //dd($folio);
-        $nombreSolicitante = $this->departamentosQueryes->getNombreSolicitante($dataSolicitud->depto_solicitante_id);
+        $nombreSolicitante = $data->trabajador_solicitante;
         //dd($nombreSolicitante);
-        $fechaElaboracion = Carbon::now("America/Mazatlan");
+        $fechaElaboracion = $data->fecha;
         //dd($fechaElaboracion);
-        $descripcion = $dataSolicitud->desc_servicio;
+        $descripcion = $data->descripcion;
         //dd($descripcion);
 
-        $pdf = app('dompdf.wrapper');
-        $pdf->loadView('Solicitudes.pdf', compact('deptoSolicitante', 'deptoSolicitado', 'folio', 'nombreSolicitante', 'fechaElaboracion', 'descripcion'));
-        return $pdf->stream('x.pdf');
+        // Inicializar DOMPDF ===================
+        $pdf = App::make('dompdf.wrapper');
+
+        $html = view('Solicitudes.solicitud_pdf', compact('deptoSolicitante', 'deptoSolicitado', 'folio', 'nombreSolicitante', 'fechaElaboracion', 'descripcion'));
+        $pdf->loadHTML($html);
+
+        // configurar opciones de Dompdf
+        $pdf->setOptions([
+            'isRemoteEnabled' => true // para cargar imagenes de forma remota
+        ]);
+
+        // cargar el HTML completo
+        $pdf->loadHTML($html);
+        $pdf->setPaper('A4');
+
+        return $pdf->stream('solicitud.pdf');
+
     }
 }

@@ -9,9 +9,7 @@ import {
 import {
     Table,
     TableBody,
-    TableCaption,
     TableCell,
-    TableFooter,
     TableHead,
     TableHeader,
     TableRow,
@@ -25,6 +23,88 @@ import { EnviarSolicitudAlertDialog } from "./dialogs/EnviarSolicitudAlertDialog
 import { router } from "@inertiajs/react";
 
 export default function TablaListadoSolicitudes({ solicitudes, departamentos }) {
+
+    function openPostRoute(url, data) {
+        // Crear un formulario en el cuerpo del documento
+        const form = new FormData();
+
+        // Añadir el token CSRF automáticamente
+        const csrfToken = document
+            .querySelector('meta[name="csrf-token"]')
+            .getAttribute("content");
+        form.append("_token", csrfToken);
+
+        // Añadir los datos
+        for (const key in data) {
+            form.append(key, data[key]);
+        }
+
+        // Crear una nueva ventana para enviar los datos
+        const newWindow = window.open("", "_blank");
+
+        // Crear y enviar la solicitud POST
+        fetch(url, {
+            method: "POST",
+            body: form,
+        })
+            .then((response) => response.blob()) // Obtener la respuesta como blob
+            .then((blob) => {
+                // Crear un objeto URL para el blob y mostrarlo en la nueva ventana
+                const blobUrl = URL.createObjectURL(blob);
+                newWindow.location.href = blobUrl;
+            })
+            .catch((error) => {
+                toast({
+                    description: 'Ocurrió un error al intentar imprimir el documento',
+                    variant: 'destructive'
+                });
+                //console.error("Error en la solicitud POST:", error);
+                newWindow.close();
+            });
+    }
+
+    const handleImprimirPDF = (solicitud_id) => {
+
+        //console.log(solicitud_id)
+
+        const solicitudSeleccionada = solicitudes.find(
+            (s) => s.solicitud_id === solicitud_id
+        )
+
+        //console.log(solicitudSeleccionada)
+        const hoy = new Date()
+
+        const dia = hoy.getDate().toString().padStart(2, '0')
+        const mes = hoy.toLocaleString('es-ES', { month: 'long' }) // mes en texto, en español
+        const año = hoy.getFullYear()
+
+        const fechaFormateada = `${dia}/${mes}/${año}`
+        //console.log(departamentos)
+        const deptoSolicitante = departamentos.find(d => d.depto_id === solicitudSeleccionada.depto_solicitante_id)
+        //console.log(deptoSolicitante)
+        const deptoSolicitado = departamentos.find(d => d.depto_id === solicitudSeleccionada.depto_solicitado_id)
+        //console.log(deptoSolicitado)
+
+
+        const datosSolicitud = {
+            id: solicitudSeleccionada.solicitud_id,
+            folio: solicitudSeleccionada.folio,
+            trabajador_solicitante: solicitudSeleccionada.jefe_solicitante,
+            fecha: fechaFormateada,
+            depto_solicitante: deptoSolicitante.nombre_depto,
+            depto_solicitado: deptoSolicitado.nombre_depto,
+            descripcion: solicitudSeleccionada.desc_servicio
+        }
+
+        console.log(datosSolicitud)
+
+        //uso de la funcion
+        openPostRoute(route("solicitudes.pdf"), {
+            datosSolicitud: JSON.stringify(datosSolicitud),
+        })
+
+    }
+
     return (
         <Table>
             <TableHeader>
@@ -78,18 +158,7 @@ export default function TablaListadoSolicitudes({ solicitudes, departamentos }) 
                                             <DropdownMenuSeparator />
                                             <DropdownMenuItem onClick={(e) => e.preventDefault()}>
                                                 <Button variant="ghost" className="w-full justify-start"
-                                                    onClick={() => {
-                                                        console.log('Generar PDF')
-                                                        router.get(route('solicitudes.pdf', solicitud.solicitud_id), {}, {
-                                                            onSuccess: () => {
-                                                                toast.success('PDF Generado correctamente')
-                                                            },
-                                                            onError: (error) => {
-                                                                console.error("Errores del servidor:", error)
-                                                                toast.error('Error al generar archivo')
-                                                            }
-                                                        })
-                                                    }}
+                                                    onClick={() => handleImprimirPDF(solicitud.solicitud_id)}
                                                 >
                                                     Generar PDF
                                                 </Button>

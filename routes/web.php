@@ -12,7 +12,7 @@ Route::resource('solicitudes', SolicitudesController::class)
     ->names('solicitudes');
 Route::put('/solicitudes/{solicitud}/enviar', [SolicitudesController::class, 'send'])->name('solicitudes.send');
 Route::put('/solicitudes/{solicitud}/setFolio', [SolicitudesController::class, 'setFolio'])->name('solicitudes.setFolio');
-Route::get('/solicitudes/{solicitud}/pdf', [SolicitudesController::class, 'generarPDF'])->name('solicitudes.pdf');
+Route::post('/solicitudes/pdf', [SolicitudesController::class, 'generarPDF'])->name('solicitudes.pdf');
 
 Route::resource('generar_folio', GenerarFolioController::class)
     ->middleware(['auth', 'verified'])
