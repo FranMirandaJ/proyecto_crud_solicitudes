@@ -71,7 +71,9 @@ export default function TablaListadoSolicitudes({ solicitudes, departamentos }) 
             (s) => s.solicitud_id === solicitud_id
         )
 
+
         //console.log(solicitudSeleccionada)
+
         const hoy = new Date()
 
         const dia = hoy.getDate().toString().padStart(2, '0')

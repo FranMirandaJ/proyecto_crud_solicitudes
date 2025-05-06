@@ -134,6 +134,8 @@ class SolicitudesController extends Controller
 
         $data = json_decode($request->datosSolicitud);
 
+        //dd(file_exists(public_path('escudo_itt_grande.png')));
+
         //dd($data); // para probar
 
         $deptoSolicitante = $data->depto_solicitante;
@@ -154,6 +156,8 @@ class SolicitudesController extends Controller
 
         $html = view('Solicitudes.solicitud_pdf', compact('deptoSolicitante', 'deptoSolicitado', 'folio', 'nombreSolicitante', 'fechaElaboracion', 'descripcion'));
         $pdf->loadHTML($html);
+
+        //dd($html);
 
         // configurar opciones de Dompdf
         $pdf->setOptions([
