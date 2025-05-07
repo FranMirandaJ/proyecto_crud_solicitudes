@@ -74,11 +74,11 @@ export default function TablaListadoSolicitudes({ solicitudes, departamentos }) 
 
         //console.log(solicitudSeleccionada)
 
-        const hoy = new Date()
+        const fecha = new Date(solicitudSeleccionada.created_at)
 
-        const dia = hoy.getDate().toString().padStart(2, '0')
-        const mes = hoy.toLocaleString('es-ES', { month: 'long' }) // mes en texto, en español
-        const año = hoy.getFullYear()
+        const dia = fecha.getDate().toString().padStart(2, '0')
+        const mes = fecha.toLocaleString('es-ES', { month: 'long' }) // mes en texto, en español
+        const año = fecha.getFullYear()
 
         const fechaFormateada = `${dia}/${mes}/${año}`
         //console.log(departamentos)
@@ -98,7 +98,7 @@ export default function TablaListadoSolicitudes({ solicitudes, departamentos }) 
             descripcion: solicitudSeleccionada.desc_servicio
         }
 
-        console.log(datosSolicitud)
+        //console.log(datosSolicitud)
 
         //uso de la funcion
         openPostRoute(route("solicitudes.pdf"), {

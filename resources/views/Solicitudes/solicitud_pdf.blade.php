@@ -4,38 +4,97 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Solicitud {{ $folio }}</title>
 </head>
 
 <style>
-    .header th, td {
-        border: solid black;
+    @page {
+        size: A4;
+        margin: 2cm;
     }
 
-    .tabla-deptos {
-        margin-left: 20rem;
-        margin-top: 3rem;
+    body {
+        position: relative;
+        font-family: sans-serif;
     }
 
-    .tabla-deptos th, td {
-        border: 2px solid black;
+    .header {
+        border-collapse: collapse;
+        margin: auto 0;
     }
 
+    .header img {
+        height: 85px;
+        padding: 1rem 2.5rem;
+    }
+
+    .header p {
+        text-align: center;
+        font-size: 13px;
+        padding: 0 3px
+    }
+
+    .header td,
+    th {
+        border: 3px solid black;
+    }
+
+    .deptos {
+        border-collapse: collapse;
+        margin: 10% 0 0 auto;
+    }
+
+    .deptos td,
+    th {
+        border: 1px solid black;
+    }
+
+    .deptos td {
+        padding: 5px;
+        padding-right: 1.7rem;
+    }
+
+    .folio {
+        margin-top: 5%;
+        margin-left: 2cm;
+        margin-right: auto;
+        margin-bottom: 1.5rem;
+        text-align: right;
+    }
+
+    .area-solicitante {
+        border-collapse: collapse;
+        width: 100%;
+        margin: auto 0;
+    }
+
+    .area-solicitante td,
+    th {
+        border: 1px solid black;
+    }
+
+    .area-solicitante td {
+        padding-left: 0.5rem;
+        padding-right: 1.7rem;
+        padding-top: 0.5rem;
+        padding-bottom: 0.5rem
+    }
 </style>
 
-<body>
-    {{-- <p>{{$deptoSolicitante}}</p>
+{{-- <p>{{$deptoSolicitante}}</p>
     <p>{{$deptoSolicitado}}</p>
     <p>{{$folio}}</p>
     <p>{{$nombreSolicitante}}</p>
     <p>{{$fechaElaboracion}}</p>
     <p>{{$descripcion}}</p> --}}
 
-    <div class="header">
-        <table class="header" style="width:100%">
+<body>
+
+    <div>
+        <table class="header">
             <tr>
                 <td>
-                    <img src="{{ 'file://' . public_path('escudo_itt_grande.png') }}" width="120">
+                    <img src="https://www.tepic.tecnm.mx/images/escudo_itt_grande.png">
                 </td>
                 <td style="text-align: center">
                     <p>Solicitud de Mantenimiento Correctivo</p>
@@ -51,31 +110,97 @@
         </table>
     </div>
 
-    <div class="tabla-deptos">
-        <table class="header" style="width:100%">
+    <div>
+        <table class="deptos">
             <tr>
                 <td>
                     <strong>Recursos Materiales y Servicios</strong>
                 </td>
-                <td style="padding: 13px;">
-
+                <td>
+                    @if ($deptoSolicitado === 'Recursos Materiales y Servicios')
+                        &nbsp;X
+                    @endif
                 </td>
             </tr>
             <tr>
                 <td>
                     <strong>Mantenimiento de Equipo</strong>
                 </td>
-                <td style="padding: 13px;">
+                <td>
+                    @if ($deptoSolicitado === 'Mantenimiento de Equipo')
+                        &nbsp;X
+                    @endif
                 </td>
             </tr>
             <tr>
                 <td>
                     <strong>Centro de Cómputo</strong>
                 </td>
-                <td style="padding: 13px;">
+                <td>
+                    @if ($deptoSolicitado === 'Centro de Cómputo')
+                        &nbsp;X
+                    @endif
                 </td>
             </tr>
         </table>
+    </div>
+
+    <div class="folio">
+        <strong>Folio:</strong> {{ $folio }}
+    </div>
+
+    <table class="area-solicitante">
+        <tr>
+            <td>
+                <strong>Área Solicitante: </strong> {{ $deptoSolicitante }}
+            </td>
+        </tr>
+    </table>
+
+    <table class="area-solicitante">
+        <tr>
+            <td>
+                <strong>Nombre y firma del Solicitante: </strong>{{ $nombreSolicitante }}
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <strong>Fecha de Elaboración: </strong>{{ $fechaElaboracion }}
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <strong>Descripción del servicio solicitado o falla a reparar: </strong>
+            </td>
+        </tr>
+        <tr>
+            <td style="font-size: 16px">
+                <br>
+                {{ $descripcion }}
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+            </td>
+        </tr>
+    </table>
+
+    <div style="margin-top: 5%; margin-bottom: 1.5rem; text-align: left; font-size: 14px">
+        c.c.p. Área Solicitante
+    </div>
+
+    <div style="margin-top: 5%; margin-left: 2cm; margin-right: auto; margin-bottom: 1.5rem; text-align: right; font-size: 14px">
+        <strong>Instituto Tecnológico de Tepic</strong>
     </div>
 
 </body>

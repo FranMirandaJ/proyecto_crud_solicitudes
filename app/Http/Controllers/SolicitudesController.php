@@ -134,30 +134,18 @@ class SolicitudesController extends Controller
 
         $data = json_decode($request->datosSolicitud);
 
-        //dd(file_exists(public_path('escudo_itt_grande.png')));
-
-        //dd($data); // para probar
-
         $deptoSolicitante = $data->depto_solicitante;
-        //dd($deptoSolicitante);
         $deptoSolicitado =$data->depto_solicitado;
-        //dd($deptoSolicitado);
         $folio = $data->folio;
-        //dd($folio);
         $nombreSolicitante = $data->trabajador_solicitante;
-        //dd($nombreSolicitante);
         $fechaElaboracion = $data->fecha;
-        //dd($fechaElaboracion);
         $descripcion = $data->descripcion;
-        //dd($descripcion);
 
         // Inicializar DOMPDF ===================
         $pdf = App::make('dompdf.wrapper');
 
         $html = view('Solicitudes.solicitud_pdf', compact('deptoSolicitante', 'deptoSolicitado', 'folio', 'nombreSolicitante', 'fechaElaboracion', 'descripcion'));
         $pdf->loadHTML($html);
-
-        //dd($html);
 
         // configurar opciones de Dompdf
         $pdf->setOptions([
